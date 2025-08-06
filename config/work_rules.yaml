@@ -1,0 +1,174 @@
+# 就業規則設定ファイル
+# 勤怠管理システムで使用される就業規則の設定
+
+# 基本労働時間設定
+working_hours:
+  # 所定労働時間（分）
+  standard_daily_minutes: 480  # 8時間
+  standard_weekly_minutes: 2400  # 40時間
+  
+  # 法定労働時間（分）
+  legal_daily_minutes: 480  # 8時間
+  legal_weekly_minutes: 2400  # 40時間
+  
+  # 休憩時間（分）
+  break_minutes: 60  # 1時間
+  
+  # 標準勤務時間
+  standard_start_time: "09:00"
+  standard_end_time: "18:00"
+
+# 残業時間設定
+overtime:
+  # 残業時間の種類と割増率
+  rates:
+    # 平日残業（所定労働時間超過）
+    weekday_overtime: 1.25  # 125%
+    
+    # 法定労働時間超過
+    legal_overtime: 1.25   # 125%
+    
+    # 深夜労働（22:00-5:00）
+    late_night: 1.25      # 125%
+    
+    # 休日労働
+    holiday_work: 1.35    # 135%
+    
+    # 深夜かつ残業
+    late_night_overtime: 1.50  # 150%
+    
+    # 休日かつ深夜
+    holiday_late_night: 1.60   # 160%
+
+  # 残業時間の上限設定
+  limits:
+    # 月間残業時間上限（分）
+    monthly_overtime_limit: 2700  # 45時間
+    
+    # 特別条項適用時の上限（分）
+    special_monthly_limit: 6000   # 100時間
+    
+    # 年間残業時間上限（分）
+    annual_overtime_limit: 43200  # 720時間
+
+# 遅刻・早退設定
+tardiness:
+  # 遅刻とみなす時間（分）
+  late_threshold_minutes: 1
+  
+  # 早退とみなす時間（分）
+  early_leave_threshold_minutes: 1
+  
+  # 遅刻・早退の丸め設定
+  rounding:
+    # 丸め単位（分）
+    unit_minutes: 15
+    
+    # 丸め方法：up（切り上げ）, down（切り下げ）, round（四捨五入）
+    method: "up"
+
+# 休暇設定
+leave:
+  # 有給休暇
+  paid_leave:
+    # 年間付与日数
+    annual_grant_days: 20
+    
+    # 時間単位有給の最小単位（分）
+    hourly_unit_minutes: 60
+    
+    # 有給消化時の労働時間
+    paid_leave_hours: 8
+
+  # 特別休暇
+  special_leave:
+    # 慶弔休暇
+    congratulatory_mourning: 5
+    
+    # 産前産後休暇
+    maternity: 98
+    
+    # 育児休暇
+    childcare: 365
+
+# 勤怠管理設定
+attendance:
+  # 出勤認定時間（この時間以上勤務で出勤とみなす）（分）
+  minimum_work_minutes: 240  # 4時間
+  
+  # 労働時間の丸め設定
+  work_time_rounding:
+    # 丸め単位（分）
+    unit_minutes: 15
+    
+    # 丸め方法
+    method: "round"
+
+# 警告・エラー設定
+validation:
+  # 警告を出す条件
+  warnings:
+    # 連続勤務日数
+    consecutive_work_days: 6
+    
+    # 1日の労働時間上限（分）
+    daily_work_limit: 720  # 12時間
+    
+    # 休憩時間不足警告（分）
+    insufficient_break: 60
+
+  # エラーとする条件
+  errors:
+    # 出勤時刻が退勤時刻より遅い
+    invalid_work_time: true
+    
+    # 24時間を超える勤務
+    over_24_hours: true
+    
+    # 未来日のデータ
+    future_date: true
+
+# 祝日設定
+holidays:
+  # 祝日ファイルのパス（相対パス）
+  holiday_file: "holidays.yaml"
+  
+  # 祝日の労働時間設定
+  holiday_work_hours: 8
+  
+  # 国民の祝日リスト（年度ごとに更新）
+  national_holidays:
+    - "2024-01-01"  # 元日
+    - "2024-01-08"  # 成人の日
+    - "2024-02-11"  # 建国記念の日
+    - "2024-02-12"  # 建国記念の日 振替休日
+    - "2024-02-23"  # 天皇誕生日
+    - "2024-03-20"  # 春分の日
+    - "2024-04-29"  # 昭和の日
+    - "2024-05-03"  # 憲法記念日
+    - "2024-05-04"  # みどりの日
+    - "2024-05-05"  # こどもの日
+    - "2024-05-06"  # こどもの日 振替休日
+    - "2024-07-15"  # 海の日
+    - "2024-08-11"  # 山の日
+    - "2024-08-12"  # 山の日 振替休日
+    - "2024-09-16"  # 敬老の日
+    - "2024-09-22"  # 秋分の日
+    - "2024-09-23"  # 秋分の日 振替休日
+    - "2024-10-14"  # スポーツの日
+    - "2024-11-03"  # 文化の日
+    - "2024-11-04"  # 文化の日 振替休日
+    - "2024-11-23"  # 勤労感謝の日
+
+# 会社固有設定
+company:
+  # 会社名
+  name: "株式会社サンプル"
+  
+  # 締め日（毎月何日締めか）
+  cutoff_day: 31
+  
+  # 給与計算期間
+  salary_period:
+    start_day: 1   # 毎月1日から
+    end_day: 31    # 毎月末日まで

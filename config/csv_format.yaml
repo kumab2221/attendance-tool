@@ -1,0 +1,294 @@
+# CSVフォーマット設定ファイル
+# 入力CSVファイルと出力CSVファイルのフォーマット定義
+
+# 入力CSVファイル設定
+input:
+  # ファイル読み込み設定
+  file_settings:
+    # 文字エンコーディング
+    encoding: "utf-8"
+    
+    # BOM付きUTF-8対応
+    encoding_with_bom: "utf-8-sig"
+    
+    # 区切り文字
+    delimiter: ","
+    
+    # クォート文字
+    quotechar: "\""
+    
+    # エスケープ文字
+    escapechar: "\\"
+    
+    # ヘッダー行の有無
+    has_header: true
+    
+    # スキップする行数（ヘッダー行含まず）
+    skip_rows: 0
+    
+    # 改行コード（auto, CRLF, LF, CR）
+    line_terminator: "auto"
+
+  # 必須カラム定義
+  required_columns:
+    # 社員情報
+    employee_id:
+      names: ["社員ID", "employee_id", "emp_id", "社員番号"]
+      type: "string"
+      required: true
+      
+    employee_name:
+      names: ["氏名", "社員名", "employee_name", "name", "名前"]
+      type: "string"
+      required: true
+      
+    department:
+      names: ["部署", "部門", "department", "dept", "所属"]
+      type: "string"
+      required: false
+      default: "未設定"
+
+    # 勤怠情報
+    work_date:
+      names: ["日付", "勤務日", "work_date", "date", "年月日"]
+      type: "date"
+      required: true
+      format: ["YYYY-MM-DD", "YYYY/MM/DD", "MM/DD/YYYY"]
+      
+    start_time:
+      names: ["出勤時刻", "開始時刻", "start_time", "出社時刻", "始業時刻"]
+      type: "time"
+      required: false
+      format: ["HH:MM", "HH:MM:SS", "H:MM"]
+      
+    end_time:
+      names: ["退勤時刻", "終了時刻", "end_time", "退社時刻", "終業時刻"]
+      type: "time"
+      required: false
+      format: ["HH:MM", "HH:MM:SS", "H:MM"]
+
+    # 休憩時間
+    break_time:
+      names: ["休憩時間", "break_time", "休憩", "昼休み"]
+      type: "integer"
+      required: false
+      unit: "minutes"
+      default: 60
+
+  # オプショナルカラム定義
+  optional_columns:
+    # 勤務状態
+    work_status:
+      names: ["勤務状態", "work_status", "status", "出勤状況"]
+      type: "string"
+      values: ["出勤", "欠勤", "有給", "特別休暇", "半休", "遅刻", "早退"]
+      
+    # 残業時間
+    overtime_hours:
+      names: ["残業時間", "overtime_hours", "overtime", "時間外労働"]
+      type: "float"
+      unit: "hours"
+      
+    # 備考
+    remarks:
+      names: ["備考", "remarks", "comment", "メモ", "特記事項"]
+      type: "string"
+      
+    # プロジェクトコード
+    project_code:
+      names: ["プロジェクトコード", "project_code", "project", "案件"]
+      type: "string"
+
+  # データ検証設定
+  validation:
+    # 日付の範囲チェック
+    date_range:
+      # 過去何年まで許可するか
+      past_years: 5
+      
+      # 未来何日まで許可するか
+      future_days: 0
+      
+    # 時刻の妥当性チェック
+    time_validation:
+      # 24時間制での時刻チェック
+      check_24hour_format: true
+      
+      # 出勤時刻 > 退勤時刻のチェック
+      check_start_end_logic: true
+      
+      # 最大勤務時間（分）
+      max_work_minutes: 1440  # 24時間
+
+# 出力CSVファイル設定
+output:
+  # 社員別レポート設定
+  employee_report:
+    filename_pattern: "employee_report_{year}_{month}.csv"
+    encoding: "utf-8-sig"  # Excel対応
+    delimiter: ","
+    
+    columns:
+      - name: "社員ID"
+        field: "employee_id"
+        
+      - name: "氏名"
+        field: "employee_name"
+        
+      - name: "部署"
+        field: "department"
+        
+      - name: "対象年月"
+        field: "target_period"
+        
+      - name: "出勤日数"
+        field: "work_days"
+        
+      - name: "欠勤日数"
+        field: "absent_days"
+        
+      - name: "遅刻回数"
+        field: "late_count"
+        
+      - name: "早退回数"
+        field: "early_leave_count"
+        
+      - name: "総労働時間"
+        field: "total_work_hours"
+        format: "%.2f"
+        
+      - name: "所定労働時間"
+        field: "standard_work_hours"
+        format: "%.2f"
+        
+      - name: "残業時間"
+        field: "overtime_hours"
+        format: "%.2f"
+        
+      - name: "深夜労働時間"
+        field: "late_night_hours"
+        format: "%.2f"
+        
+      - name: "有給取得日数"
+        field: "paid_leave_days"
+        format: "%.1f"
+
+  # 部門別レポート設定
+  department_report:
+    filename_pattern: "department_report_{year}_{month}.csv"
+    encoding: "utf-8-sig"
+    delimiter: ","
+    
+    columns:
+      - name: "部署"
+        field: "department"
+        
+      - name: "対象年月"
+        field: "target_period"
+        
+      - name: "所属人数"
+        field: "employee_count"
+        
+      - name: "総出勤日数"
+        field: "total_work_days"
+        
+      - name: "総欠勤日数"
+        field: "total_absent_days"
+        
+      - name: "総労働時間"
+        field: "total_work_hours"
+        format: "%.2f"
+        
+      - name: "総残業時間"
+        field: "total_overtime_hours"
+        format: "%.2f"
+        
+      - name: "平均出勤率"
+        field: "average_attendance_rate"
+        format: "%.1f%%"
+
+  # 日別詳細レポート設定
+  daily_detail_report:
+    filename_pattern: "daily_detail_{year}_{month}.csv"
+    encoding: "utf-8-sig"
+    delimiter: ","
+    
+    columns:
+      - name: "社員ID"
+        field: "employee_id"
+        
+      - name: "氏名"
+        field: "employee_name"
+        
+      - name: "部署"
+        field: "department"
+        
+      - name: "勤務日"
+        field: "work_date"
+        
+      - name: "出勤時刻"
+        field: "start_time"
+        
+      - name: "退勤時刻"
+        field: "end_time"
+        
+      - name: "休憩時間"
+        field: "break_minutes"
+        
+      - name: "労働時間"
+        field: "work_hours"
+        format: "%.2f"
+        
+      - name: "残業時間"
+        field: "overtime_hours"
+        format: "%.2f"
+        
+      - name: "遅刻時間"
+        field: "late_minutes"
+        
+      - name: "早退時間"
+        field: "early_leave_minutes"
+        
+      - name: "勤務状態"
+        field: "work_status"
+
+# エラーログ出力設定
+error_log:
+  filename_pattern: "error_log_{year}_{month}_{day}.csv"
+  encoding: "utf-8-sig"
+  delimiter: ","
+  
+  columns:
+    - name: "発生時刻"
+      field: "timestamp"
+      
+    - name: "エラーレベル"
+      field: "level"
+      
+    - name: "行番号"
+      field: "row_number"
+      
+    - name: "社員ID"
+      field: "employee_id"
+      
+    - name: "エラー内容"
+      field: "error_message"
+      
+    - name: "エラーデータ"
+      field: "error_data"
+
+# 設定検証
+format_validation:
+  # 必須設定の検証
+  required_settings:
+    - "input.required_columns.employee_id"
+    - "input.required_columns.work_date"
+    - "output.employee_report.columns"
+    
+  # 文字エンコーディングの検証
+  supported_encodings:
+    - "utf-8"
+    - "utf-8-sig"
+    - "shift_jis"
+    - "cp932"
+    - "iso-2022-jp"

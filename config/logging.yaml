@@ -1,0 +1,279 @@
+# ログ設定ファイル
+# Python logging モジュール用設定
+
+version: 1
+disable_existing_loggers: false
+
+# フォーマッター定義
+formatters:
+  # 標準フォーマット
+  standard:
+    format: "%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    
+  # 詳細フォーマット
+  detailed:
+    format: "%(asctime)s [%(levelname)8s] %(name)s:%(lineno)d %(funcName)s() - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    
+  # JSON形式フォーマット（監査ログ用）
+  json:
+    format: '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "line": %(lineno)d, "function": "%(funcName)s", "message": "%(message)s"}'
+    datefmt: "%Y-%m-%dT%H:%M:%S"
+    
+  # 進捗表示用フォーマット
+  progress:
+    format: "[%(asctime)s] %(message)s"
+    datefmt: "%H:%M:%S"
+    
+  # エラー専用フォーマット
+  error:
+    format: "%(asctime)s [ERROR] %(name)s:%(lineno)d %(funcName)s() - %(message)s\nException: %(exc_info)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+# ハンドラー定義
+handlers:
+  # コンソール出力
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+    
+  # 詳細コンソール出力（デバッグ用）
+  console_debug:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: detailed
+    stream: ext://sys.stdout
+    
+  # 進捗表示用コンソール
+  console_progress:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: progress
+    stream: ext://sys.stdout
+    filters: [progress_filter]
+    
+  # メインログファイル
+  file_main:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: detailed
+    filename: logs/attendance_tool.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+    
+  # エラーログファイル
+  file_error:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: error
+    filename: logs/error.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 10
+    encoding: utf-8
+    
+  # デバッグログファイル
+  file_debug:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/debug.log
+    maxBytes: 52428800  # 50MB
+    backupCount: 3
+    encoding: utf-8
+    
+  # 監査ログファイル（JSON形式）
+  file_audit:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/audit.log
+    when: midnight
+    interval: 1
+    backupCount: 30
+    encoding: utf-8
+    
+  # パフォーマンスログファイル
+  file_performance:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/performance.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+
+# フィルター定義
+filters:
+  # 進捗表示フィルター
+  progress_filter:
+    (): attendance_tool.utils.logging_filters.ProgressFilter
+    
+  # 個人情報マスキングフィルター
+  pii_mask_filter:
+    (): attendance_tool.utils.logging_filters.PIIMaskFilter
+    mask_patterns:
+      - employee_id
+      - employee_name
+      - personal_info
+
+# ロガー定義
+loggers:
+  # ルートロガー
+  root:
+    level: INFO
+    handlers: [console, file_main, file_error]
+    propagate: false
+    
+  # アプリケーションメインロガー
+  attendance_tool:
+    level: INFO
+    handlers: [console, file_main, file_error]
+    propagate: false
+    qualname: attendance_tool
+    
+  # CLIロガー
+  attendance_tool.cli:
+    level: INFO
+    handlers: [console_progress, file_main]
+    propagate: false
+    qualname: attendance_tool.cli
+    
+  # CSVファイル処理ロガー
+  attendance_tool.services.csv_processor:
+    level: INFO
+    handlers: [console, file_main, file_error]
+    propagate: false
+    qualname: attendance_tool.services.csv_processor
+    filters: [pii_mask_filter]
+    
+  # 勤怠計算ロガー
+  attendance_tool.services.attendance_calculator:
+    level: INFO
+    handlers: [console, file_main, file_audit]
+    propagate: false
+    qualname: attendance_tool.services.attendance_calculator
+    
+  # 設定管理ロガー
+  attendance_tool.utils.config:
+    level: INFO
+    handlers: [console, file_main]
+    propagate: false
+    qualname: attendance_tool.utils.config
+    
+  # パフォーマンス計測ロガー
+  attendance_tool.performance:
+    level: INFO
+    handlers: [file_performance]
+    propagate: false
+    qualname: attendance_tool.performance
+    
+  # データ検証ロガー
+  attendance_tool.services.validator:
+    level: WARNING
+    handlers: [console, file_main, file_error]
+    propagate: false
+    qualname: attendance_tool.services.validator
+    filters: [pii_mask_filter]
+    
+  # エラーハンドリングロガー
+  attendance_tool.utils.error_handler:
+    level: ERROR
+    handlers: [console, file_error, file_audit]
+    propagate: false
+    qualname: attendance_tool.utils.error_handler
+
+# 環境別設定
+environments:
+  # 開発環境
+  development:
+    root_level: DEBUG
+    console_level: DEBUG
+    file_level: DEBUG
+    enable_debug_file: true
+    
+  # テスト環境
+  testing:
+    root_level: WARNING
+    console_level: WARNING
+    file_level: INFO
+    enable_debug_file: false
+    
+  # 本番環境
+  production:
+    root_level: INFO
+    console_level: WARNING
+    file_level: INFO
+    enable_debug_file: false
+    enable_audit: true
+
+# ログローテーション設定
+rotation:
+  # ファイルサイズベース
+  size_based:
+    max_size: 10485760  # 10MB
+    backup_count: 5
+    
+  # 時間ベース
+  time_based:
+    when: midnight
+    interval: 1
+    backup_count: 30
+    
+  # 圧縮設定
+  compression:
+    enabled: true
+    format: gz
+
+# 監視・通知設定
+monitoring:
+  # エラー通知設定
+  error_notification:
+    enabled: false
+    # email_recipients: ["admin@company.com"]
+    # slack_webhook: ""
+    error_threshold: 10  # 10分間に10回エラーで通知
+    
+  # パフォーマンス監視
+  performance_monitoring:
+    enabled: true
+    slow_query_threshold: 5.0  # 5秒以上
+    memory_usage_threshold: 0.8  # 80%以上
+    
+  # ディスク使用量監視
+  disk_monitoring:
+    enabled: true
+    log_directory: logs/
+    warning_threshold: 0.8  # 80%使用で警告
+    critical_threshold: 0.95  # 95%使用で重要
+
+# セキュリティ設定
+security:
+  # 個人情報マスキング
+  pii_masking:
+    enabled: true
+    mask_char: "*"
+    preserve_length: true
+    
+    # マスキング対象フィールド
+    sensitive_fields:
+      - employee_name
+      - personal_id
+      - phone_number
+      - email
+      - address
+      
+  # ログファイルアクセス制御
+  file_permissions:
+    log_files: 0o640
+    log_directory: 0o750
+    
+  # ログ保持期間
+  retention:
+    main_logs: 90  # 日
+    error_logs: 365  # 日
+    audit_logs: 2555  # 日（7年）
+    debug_logs: 30  # 日
