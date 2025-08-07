@@ -256,3 +256,38 @@ class AttendanceCalculator:
             return (minutes // unit) * unit
         else:  # round
             return round(minutes / unit) * unit
+    
+    # TASK-202 Red Phase: 違反チェック統合メソッド追加
+    
+    def calculate_with_violations(self, records: List[AttendanceRecord], period: Optional[str] = None) -> tuple[AttendanceSummary, List['WorkRuleViolation']]:
+        """集計結果と違反情報を同時生成 - Green Phase最小実装"""
+        # 通常の集計を実行
+        summary = self.calculate(records, period)
+        
+        # 違反チェックを実行
+        violations = self.rules_engine.check_all_violations(records)
+        
+        # 違反情報をサマリーに統合
+        updated_summary = self._integrate_violation_warnings(summary, violations)
+        
+        return updated_summary, violations
+
+    def _integrate_violation_warnings(self, summary: AttendanceSummary, violations: List['WorkRuleViolation']) -> AttendanceSummary:
+        """違反情報をサマリーに統合 - Green Phase最小実装"""
+        from .violations import ViolationLevel
+        
+        # 既存のwarningsとviolationsに追加
+        if summary.warnings is None:
+            summary.warnings = []
+        if summary.violations is None:
+            summary.violations = []
+        
+        # 違反レベル別に分類
+        for violation in violations:
+            message = f"{violation.violation_type}: {violation.message}"
+            if violation.level in [ViolationLevel.WARNING, ViolationLevel.INFO]:
+                summary.warnings.append(message)
+            elif violation.level in [ViolationLevel.VIOLATION, ViolationLevel.CRITICAL]:
+                summary.violations.append(message)
+        
+        return summary
