@@ -13,7 +13,8 @@
       "Bash(ATTENDANCE_TOOL_WORK_RULES_WORKING_HOURS_STANDARD_DAILY_MINUTES=450 python3 -c \"\nimport sys\nsys.path.append(''src'')\nfrom attendance_tool.utils.config import ConfigManager\n\ntry:\n    config_manager = ConfigManager()\n    work_rules = config_manager.get_work_rules()\n    \n    standard_minutes = work_rules[''working_hours''][''standard_daily_minutes'']\n    print(f''環境変数オーバーライド後の標準労働時間: {standard_minutes}分'')\n    \n    if standard_minutes == 450:\n        print(''✅ 環境変数による設定オーバーライドが正常に動作しています'')\n    else:\n        print(''❌ 環境変数による設定オーバーライドが機能していません'')\n        \nexcept Exception as e:\n    print(f''❌ エラー: {e}'')\n    sys.exit(1)\n\")",
       "Bash(ATTENDANCE_TOOL_WORK_RULES_WORKING_HOURS_STANDARD_DAILY_MINUTES=450 python3 -c \"\nimport sys\nsys.path.append(''''src'''')\nfrom attendance_tool.utils.config import ConfigManager\n\ntry:\n    config_manager = ConfigManager()\n    work_rules = config_manager.get_work_rules()\n    \n    standard_minutes = work_rules[''''working_hours''''][''''standard_daily_minutes'''']\n    print(f''''\\n最終結果 - 環境変数オーバーライド後の標準労働時間: {standard_minutes}分'''')\n    \n    if standard_minutes == 450:\n        print(''''✅ 環境変数による設定オーバーライドが正常に動作しています'''')\n    else:\n        print(''''❌ 環境変数による設定オーバーライドが機能していません'''')\n        \nexcept Exception as e:\n    print(f''''❌ エラー: {e}'''')\n    sys.exit(1)\n\")",
       "Bash(export ATTENDANCE_TOOL_WORK_RULES_WORKING_HOURS_STANDARD_DAILY_MINUTES=450)",
-      "Bash(export:*)"
+      "Bash(export:*)",
+      "Bash(pip3 install:*)"
     ],
     "deny": []
   }
