@@ -18,6 +18,8 @@ class AttendanceSummary:
     period_end: date
     total_days: int
     business_days: int
+    employee_name: str = "Unknown User"  # Green Phase: テストのために追加
+    department: str = "未設定"           # Green Phase: テストのために追加
     
     # 出勤関連
     attendance_days: int = 0

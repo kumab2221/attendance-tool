@@ -16,7 +16,8 @@
       "Bash(export:*)",
       "Bash(pip3 install:*)",
       "Bash(apt list:*)",
-      "Bash(apt install:*)"
+      "Bash(apt install:*)",
+      "Bash(pip install:*)"
     ],
     "deny": []
   }
