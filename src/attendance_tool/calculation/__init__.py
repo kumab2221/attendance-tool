@@ -4,6 +4,9 @@ from .calculator import AttendanceCalculator, AttendanceCalculationError
 from .summary import AttendanceSummary
 from .work_rules_engine import WorkRulesEngine
 from .violations import WorkRuleViolation, ViolationLevel, ComplianceReport
+from .department import Department
+from .department_aggregator import DepartmentAggregator  
+from .department_summary import DepartmentSummary, DepartmentComparison, DepartmentReport
 
 __all__ = [
     'AttendanceCalculator',
@@ -12,5 +15,10 @@ __all__ = [
     'WorkRulesEngine',
     'WorkRuleViolation',
     'ViolationLevel', 
-    'ComplianceReport'
+    'ComplianceReport',
+    'Department',
+    'DepartmentAggregator',
+    'DepartmentSummary',
+    'DepartmentComparison',
+    'DepartmentReport'
 ]
