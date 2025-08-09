@@ -61,3 +61,29 @@ class ReportMetadata:
     data_period_end: str
     total_records: int
     data_source: str = "勤怠管理システム"
+
+
+@dataclass
+class ExcelExportConfig:
+    """Excel出力設定"""
+    
+    filename_pattern: str
+    worksheet_names: Dict[str, str] = field(default_factory=dict)
+    header_style: Dict[str, Any] = field(default_factory=dict)
+    cell_formats: Dict[str, str] = field(default_factory=dict)
+    conditional_formats: List['ConditionalFormat'] = field(default_factory=list)
+    chart_settings: Dict[str, Any] = field(default_factory=dict)
+    
+    def get_filename(self, year: int, month: int) -> str:
+        """ファイル名を生成"""
+        return self.filename_pattern.format(year=year, month=month, month_02d=f"{month:02d}")
+
+
+@dataclass
+class ConditionalFormat:
+    """条件付き書式設定"""
+    
+    column: str
+    condition_type: str
+    values: List[Any]
+    format_style: Dict[str, Any]
