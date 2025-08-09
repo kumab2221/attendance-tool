@@ -1,0 +1,113 @@
+# エラーハンドリング設定
+error_handling:
+  # リトライ設定
+  retry:
+    max_attempts: 3
+    base_delay: 1.0
+    max_delay: 10.0
+    backoff_multiplier: 2.0
+  
+  # メモリ管理設定
+  memory:
+    gc_threshold: 0.8  # メモリ使用率80%でGC実行
+    chunk_size: 1000   # チャンク処理のサイズ
+  
+  # ログ設定
+  logging:
+    structured: true
+    mask_personal_info: true
+    output_levels:
+      CRITICAL: ["console", "file", "system_log"]
+      ERROR: ["console", "file"]
+      WARNING: ["file"]
+      INFO: ["file"]
+  
+  # エラー分類マッピング拡張
+  classification:
+    system_errors:
+      FileNotFoundError:
+        code: "SYS-001"
+        severity: "ERROR"
+        retry_enabled: true
+      PermissionError:
+        code: "SYS-004"
+        severity: "CRITICAL"
+        retry_enabled: false
+      MemoryError:
+        code: "SYS-003"
+        severity: "CRITICAL"
+        retry_enabled: false
+      OSError:
+        code: "SYS-002"
+        severity: "ERROR"
+        retry_enabled: true
+    
+    data_errors:
+      ValidationError:
+        code: "DATA-001"
+        severity: "WARNING"
+        retry_enabled: false
+      TimeLogicError:
+        code: "DATA-201"
+        severity: "ERROR"
+        retry_enabled: false
+      WorkHoursError:
+        code: "BIZ-104"
+        severity: "WARNING"
+        retry_enabled: false
+
+# エラーメッセージ定義（日本語）
+messages:
+  ja:
+    system_errors:
+      SYS-001:
+        title: "ファイルが見つかりません"
+        detail: "指定されたファイル '{path}' が存在しないか、アクセスできません"
+        solutions:
+          - "ファイルパスを確認してください"
+          - "ファイルが存在することを確認してください"
+          - "ファイル名にタイプミスがないか確認してください"
+      SYS-002:
+        title: "ディスク容量が不足しています"
+        detail: "出力先のディスクに十分な空き容量がありません"
+        solutions:
+          - "不要なファイルを削除して容量を確保してください"
+          - "別のドライブを出力先に指定してください"
+      SYS-003:
+        title: "メモリが不足しています"
+        detail: "処理に必要なメモリが確保できません"
+        solutions:
+          - "他のアプリケーションを終了してください"
+          - "より小さなデータセットで処理を実行してください"
+          - "チャンク処理モードを有効にしてください"
+      SYS-004:
+        title: "ファイルへのアクセス権限がありません"
+        detail: "ファイルまたはフォルダへの読み書き権限がありません"
+        solutions:
+          - "管理者権限でアプリケーションを実行してください"
+          - "ファイルの権限設定を確認してください"
+          - "他のプロセスがファイルを使用していないか確認してください"
+    
+    data_errors:
+      DATA-001:
+        title: "データの形式に問題があります"
+        detail: "入力データが期待される形式と異なります"
+        solutions:
+          - "CSVファイルの形式を確認してください"
+          - "必要な列が存在することを確認してください"
+          - "文字エンコーディングを確認してください"
+      DATA-201:
+        title: "時刻の論理に矛盾があります"
+        detail: "出勤時刻が退勤時刻よりも遅くなっています"
+        solutions:
+          - "出勤時刻と退勤時刻を確認してください"
+          - "日付をまたぐ勤務の場合は正しく入力されているか確認してください"
+    
+    business_errors:
+      BIZ-104:
+        title: "勤務時間が異常な値です"
+        detail: "24時間を超える勤務時間または負の値が検出されました"
+        solutions:
+          - "勤務時間の入力を確認してください"
+          - "休憩時間が正しく入力されているか確認してください"
+          - "特別な勤務形態の場合は設定を見直してください"
