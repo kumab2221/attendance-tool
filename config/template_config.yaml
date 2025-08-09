@@ -1,0 +1,91 @@
+# テンプレート設定ファイル
+# TASK-303: レポートテンプレート機能
+
+template_settings:
+  # デフォルトテンプレート設定
+  default:
+    excel:
+      template_path: "templates/excel/default_template.xlsx"
+      company_logo: "templates/assets/company_logo.png"
+      header_info:
+        company_name: "株式会社サンプル"
+        report_title: "勤怠管理レポート"
+        generated_by: "勤怠管理自動集計ツール"
+      footer_info:
+        copyright: "© 2024 Company Name. All rights reserved."
+        contact: "support@company.com"
+      style:
+        primary_color: "#2E86AB"
+        secondary_color: "#A23B72" 
+        accent_color: "#F18F01"
+        background_color: "#C73E1D"
+    csv:
+      template_path: "templates/csv/default_template.csv"
+      header_format:
+        include_company_info: true
+        include_generation_time: true
+        include_summary_stats: true
+
+  # カスタムテンプレート例
+  corporate:
+    excel:
+      template_path: "templates/excel/corporate_template.xlsx"
+      company_logo: "templates/assets/corporate_logo.png"
+      header_info:
+        company_name: "Corporate Inc."
+        report_title: "月次勤怠分析レポート"
+        generated_by: "HR Analytics System"
+      style:
+        primary_color: "#1f4e79"
+        secondary_color: "#70ad47"
+        accent_color: "#ffc000"
+
+  # シンプルテンプレート
+  simple:
+    excel:
+      template_path: "templates/excel/simple_template.xlsx"
+      header_info:
+        company_name: ""
+        report_title: "勤怠レポート"
+        generated_by: ""
+      style:
+        primary_color: "#000000"
+        secondary_color: "#666666"
+        accent_color: "#cccccc"
+
+# テンプレート機能設定
+template_features:
+  # 比較機能 (REQ-301)
+  comparison:
+    enabled: true
+    previous_months: 3
+    comparison_charts: true
+    trend_analysis: true
+  
+  # グラフ表示機能 (REQ-302)
+  charts:
+    enabled: true
+    chart_types:
+      - "bar_chart"
+      - "line_chart"
+      - "pie_chart"
+    interactive: false
+  
+  # 複数月統合機能 (REQ-303)
+  multi_month:
+    enabled: true
+    max_months: 12
+    aggregation_types:
+      - "sum"
+      - "average"
+      - "trend"
+
+# 出力設定
+output_settings:
+  excel:
+    auto_open: false
+    password_protect: false
+    read_only: true
+  csv:
+    encoding: "utf-8-sig"
+    include_bom: true
