@@ -23,7 +23,8 @@
       "Bash(claude code tdd-red:*)",
       "Bash(claude code tdd-green:*)",
       "Bash(claude code tdd-refactor TASK-501)",
-      "Bash(claude code tdd-verify-complete:*)"
+      "Bash(claude code tdd-verify-complete:*)",
+      "Bash(claude code tdd-requirements TASK-502)"
     ],
     "deny": []
   }
