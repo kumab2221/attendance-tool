@@ -295,9 +295,12 @@ class TestValidationResult:
             column_mapping={}
         )
         
-        # When & Then: メソッドが実装されていないため NotImplementedError
-        with pytest.raises(NotImplementedError):
-            result.has_critical_errors()
+        # When: 重大エラーの有無を確認
+        has_errors = result.has_critical_errors()
+        
+        # Then: 結果が返される
+        assert isinstance(has_errors, bool)
+        assert has_errors is False  # エラーがないのでFalse
 
     def test_get_summary_method(self):
         """検証結果サマリー取得テスト"""
@@ -311,9 +314,13 @@ class TestValidationResult:
             column_mapping={}
         )
         
-        # When & Then: メソッドが実装されていないため NotImplementedError
-        with pytest.raises(NotImplementedError):
-            result.get_summary()
+        # When: サマリー取得
+        summary = result.get_summary()
+        
+        # Then: サマリー文字列が返される
+        assert isinstance(summary, str)
+        assert "検証結果" in summary
+        assert "処理行数" in summary
 
 
 class TestCustomExceptions:

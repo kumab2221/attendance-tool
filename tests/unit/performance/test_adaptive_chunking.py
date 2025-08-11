@@ -344,7 +344,6 @@ class TestOptimizedCSVProcessor:
         # 性能目標: メモリ使用量一定（< 200MB）
         
         processor = OptimizedCSVProcessor(
-            memory_limit_mb=200,
             chunk_size=10000
         )
         

@@ -28,6 +28,8 @@ class TestStreamingProcessor:
             work_date = date(2024, 1, (i % 31) + 1)
             records.append(AttendanceRecord(
                 employee_id=employee_id,
+                employee_name=f"社員{i % 100:03d}",
+                department=f"部署{i % 10}",
                 date=work_date,
                 start_time=datetime(2024, 1, 1, 9, 0),
                 end_time=datetime(2024, 1, 1, 18, 0),
@@ -40,7 +42,7 @@ class TestStreamingProcessor:
         # 期待結果: 1GB制限内での大容量データ処理
         # 性能目標: メモリ使用量 < 1024MB
         
-        processor = StreamingProcessor(memory_limit_mb=1024)
+        processor = StreamingProcessor(memory_limit=1024 * 1024 * 1024)
         
         # メモリ監視を開始
         initial_memory = psutil.Process().memory_info().rss / (1024 * 1024)  # MB
@@ -87,7 +89,7 @@ class TestStreamingProcessor:
         # 性能目標: メモリ使用量制限内維持
         
         processor = StreamingProcessor(
-            memory_limit_mb=512,
+            memory_limit=512 * 1024 * 1024,
             backpressure_threshold=0.8
         )
         
@@ -97,6 +99,8 @@ class TestStreamingProcessor:
                 # 大量のデータを生成してメモリ圧迫をシミュレート
                 yield AttendanceRecord(
                     employee_id=f"EMP_{i:04d}",
+                    employee_name=f"社員{i:04d}",
+                    department=f"部署{i % 10}",
                     date=date(2024, 1, 1),
                     start_time=datetime(2024, 1, 1, 9, 0),
                     end_time=datetime(2024, 1, 1, 18, 0),
@@ -193,13 +197,15 @@ class TestStreamingProcessor:
         """メモリ効率ストリーミングテスト"""
         # 期待結果: 大容量データでの一定メモリ使用
         
-        processor = StreamingProcessor(memory_limit_mb=256)
+        processor = StreamingProcessor(memory_limit=256 * 1024 * 1024)
         
         def large_data_generator():
             # 10万レコードのシミュレーション
             for i in range(100000):
                 yield AttendanceRecord(
                     employee_id=f"EMP_{i % 1000:04d}",
+                    employee_name=f"社員{i % 1000:04d}",
+                    department=f"部署{i % 10}",
                     date=date(2024, 1, (i % 31) + 1),
                     start_time=datetime(2024, 1, 1, 9, 0),
                     end_time=datetime(2024, 1, 1, 18, 0),
@@ -235,6 +241,8 @@ class TestStreamingProcessor:
                     # 不正なデータを生成
                     yield AttendanceRecord(
                         employee_id=None,  # エラーの原因
+                        employee_name="エラー社員",
+                        department="エラー部署",
                         date=record.date,
                         start_time=record.start_time,
                         end_time=record.end_time,

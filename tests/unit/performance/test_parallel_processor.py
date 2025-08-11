@@ -35,6 +35,8 @@ class TestParallelBatchProcessor:
                 work_date = date(2024, 1, day + 1)
                 records.append(AttendanceRecord(
                     employee_id=employee_key,
+                    employee_name=f"社員{emp_id:03d}",
+                    department=f"部署{emp_id % 10}",
                     date=work_date,
                     start_time=datetime(2024, 1, day + 1, 9, 0),
                     end_time=datetime(2024, 1, day + 1, 18, 0),
@@ -182,6 +184,8 @@ class TestParallelBatchProcessor:
             for emp_id in range(50):  # 50名
                 records.append(AttendanceRecord(
                     employee_id=f"EMP_{emp_id:03d}",
+                    employee_name=f"社員{emp_id:03d}",
+                    department=f"部署{emp_id % 10}",
                     date=work_date,
                     start_time=datetime.combine(work_date, datetime.min.time().replace(hour=9)),
                     end_time=datetime.combine(work_date, datetime.min.time().replace(hour=18)),
@@ -237,6 +241,8 @@ class TestParallelBatchProcessor:
             # 不正なデータを挿入
             corrupted_data[emp_id][0] = AttendanceRecord(
                 employee_id=None,  # エラーの原因
+                employee_name="エラー社員",
+                department="エラー部署",
                 date=date(2024, 1, 1),
                 start_time=datetime(2024, 1, 1, 9, 0),
                 end_time=datetime(2024, 1, 1, 18, 0),

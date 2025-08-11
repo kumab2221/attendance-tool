@@ -27,12 +27,8 @@ class TestPerformanceOptimizedCalculator:
     def performance_config(self) -> PerformanceConfig:
         """パフォーマンス最適化設定"""
         return PerformanceConfig(
-            memory_limit_mb=1024,
-            parallel_threshold=10,
-            chunk_size=1000,
-            gc_optimization=True,
-            memory_pool_enabled=True,
-            max_workers=4
+            memory_limit=1024 * 1024 * 1024,
+            chunk_size=1000
         )
     
     @pytest.fixture
@@ -58,6 +54,8 @@ class TestPerformanceOptimizedCalculator:
                 
                 records.append(AttendanceRecord(
                     employee_id=employee_key,
+                    employee_name=f"社員{emp_id:03d}",
+                    department=f"部署{emp_id % 10}",
                     date=work_date,
                     start_time=start_time,
                     end_time=end_time,
@@ -369,11 +367,8 @@ class TestPerformanceOptimizedCalculator:
         
         # 基本設定での処理
         basic_config = PerformanceConfig(
-            memory_limit_mb=512,
-            parallel_threshold=50,
-            chunk_size=500,
-            gc_optimization=False,
-            memory_pool_enabled=False
+            memory_limit=512 * 1024 * 1024,
+            chunk_size=500
         )
         
         basic_calculator = PerformanceOptimizedCalculator(config=basic_config)
@@ -384,12 +379,8 @@ class TestPerformanceOptimizedCalculator:
         
         # 最適化設定での処理
         optimized_config = PerformanceConfig(
-            memory_limit_mb=1024,
-            parallel_threshold=10,
-            chunk_size=1000,
-            gc_optimization=True,
-            memory_pool_enabled=True,
-            max_workers=4
+            memory_limit=1024 * 1024 * 1024,
+            chunk_size=1000
         )
         
         optimized_calculator = PerformanceOptimizedCalculator(config=optimized_config)
@@ -459,10 +450,8 @@ class TestPerformanceOptimizedCalculator:
         
         # 最大負荷設定
         stress_config = PerformanceConfig(
-            memory_limit_mb=2048,  # 2GB制限
-            max_workers=8,
-            chunk_size=5000,
-            stress_test_mode=True
+            memory_limit=2048 * 1024 * 1024,  # 2GB制限
+            chunk_size=5000
         )
         
         calculator = PerformanceOptimizedCalculator(config=stress_config)

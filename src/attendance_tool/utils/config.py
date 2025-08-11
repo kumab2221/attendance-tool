@@ -174,6 +174,9 @@ class ConfigManager:
                 else:
                     # デフォルトのネスト構造
                     key_path = key_parts
+            elif len(key_parts) >= 4 and key_parts[0] == 'overtime' and key_parts[1] == 'rates':
+                # OVERTIME_RATES_WEEKDAY_OVERTIME -> overtime.rates.weekday_overtime
+                key_path = ['overtime', 'rates', '_'.join(key_parts[2:])]
             else:
                 # その他の場合はそのまま
                 key_path = key_parts

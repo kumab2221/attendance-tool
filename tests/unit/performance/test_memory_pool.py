@@ -123,7 +123,7 @@ class TestMemoryPool:
         """メモリ圧迫時の処理テスト"""
         # 期待結果: 利用可能メモリ不足時の適切な対応
         
-        pool = MemoryPool(memory_limit_mb=512)
+        pool = MemoryPool(memory_limit=512 * 1024 * 1024)
         
         # メモリ圧迫状況をシミュレート
         with patch('psutil.virtual_memory') as mock_memory:

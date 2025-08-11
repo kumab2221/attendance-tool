@@ -41,7 +41,8 @@
       "Bash(cmd /c make.cmd:*)",
       "Bash(./make.cmd help)",
       "Bash(./make.cmd complexity)",
-      "Bash(./make.cmd complexity-report)"
+      "Bash(./make.cmd complexity-report)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
