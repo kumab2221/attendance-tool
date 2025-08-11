@@ -5,6 +5,30 @@ import pandas as pd
 import psutil
 from typing import Iterator, List, Optional, Any
 import math
+from dataclasses import dataclass
+
+
+@dataclass
+class ProcessingChunk:
+    """処理チャンク"""
+    data: pd.DataFrame
+    chunk_id: int
+    total_size: int
+    
+    @property
+    def size(self) -> int:
+        return len(self.data)
+
+
+@dataclass  
+class ChunkProcessingResult:
+    """チャンク処理結果"""
+    chunk_id: int
+    processed_records: int
+    success: bool
+    processing_time: float
+    memory_usage: float
+    error_message: Optional[str] = None
 
 
 class AdaptiveChunking:
