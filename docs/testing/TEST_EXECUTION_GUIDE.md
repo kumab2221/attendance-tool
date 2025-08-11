@@ -10,7 +10,7 @@
 ### 環境準備
 ```bash
 # 1. プロジェクトクローン
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 
 # 2. 仮想環境作成

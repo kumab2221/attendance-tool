@@ -350,16 +350,6 @@
 
 ## 📞 プロジェクト情報・連絡先
 
-### 📧 **連絡先**
-
-| 役割 | 担当者 | 連絡先 |
-|------|--------|--------|
-| **Product Manager** | - | pm@company.com |
-| **Tech Lead** | - | tech-lead@company.com |
-| **QA Lead** | - | qa-lead@company.com |
-| **一般問い合わせ** | - | attendance-tool@company.com |
-
-### 🔗 **重要リンク**
 
 | リソース | URL |
 |----------|-----|
@@ -373,8 +363,6 @@
 <div align="center">
 
 **勤怠管理自動集計ツール プロジェクト**
-
-*Built with ❤️ for efficient workforce management*
 
 **Last Updated**: 2025-08-11  
 **Version**: 1.0

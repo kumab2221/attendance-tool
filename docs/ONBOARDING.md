@@ -29,7 +29,7 @@
 **2. 🚀 クイックスタート体験（30分）**
 ```bash
 # 実行ファイルで即座に体験
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 dist/attendance-tool-cli.exe --version
 dist/attendance-tool-gui.exe

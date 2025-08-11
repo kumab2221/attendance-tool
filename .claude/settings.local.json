@@ -30,7 +30,18 @@
       "Bash(dist/attendance-tool-cli.exe:*)",
       "Bash(dir:*)",
       "Bash(distattendance-tool-gui.exe)",
-      "Bash(dist/attendance-tool-gui.exe)"
+      "Bash(dist/attendance-tool-gui.exe)",
+      "Bash(lizard:*)",
+      "Bash(echo \"Return code: $?\")",
+      "Bash(make:*)",
+      "Bash(choco:*)",
+      "Bash(winget:*)",
+      "Bash(cmd /c make.bat:*)",
+      "Bash(powershell:*)",
+      "Bash(cmd /c make.cmd:*)",
+      "Bash(./make.cmd help)",
+      "Bash(./make.cmd complexity)",
+      "Bash(./make.cmd complexity-report)"
     ],
     "deny": []
   }

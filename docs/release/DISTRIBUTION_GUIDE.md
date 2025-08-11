@@ -35,7 +35,7 @@
 
 ### 1. ソースコード取得
 ```bash
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 ```
 

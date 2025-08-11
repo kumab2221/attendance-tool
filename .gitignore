@@ -168,3 +168,5 @@ Thumbs.db
 # Excel temporary files
 ~$*.xlsx
 ~$*.xls
+
+reports/

@@ -1,4 +1,5 @@
 """勤怠集計計算機 - Red Phase実装"""
+from __future__ import annotations
 
 from typing import List, Optional, Dict, Any
 from datetime import date

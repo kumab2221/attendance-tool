@@ -47,9 +47,9 @@ def run_lizard(source_dirs, threshold=10, output_file=None, output_format="text"
         # lizardはjson直接サポートしていないので、後で変換
         pass
     
-    # 詳細出力
+    # 詳細出力 (lizardは-V/--verboseを使用)
     if verbose:
-        cmd.extend(["-v"])
+        cmd.extend(["-V"])
     
     # ソースディレクトリを追加
     cmd.extend(source_dirs)
@@ -74,7 +74,7 @@ def run_lizard(source_dirs, threshold=10, output_file=None, output_format="text"
         return result.returncode, result.stdout, result.stderr
         
     except FileNotFoundError:
-        print("エラー: lizardがインストールされていません。", file=sys.stderr)
+        print("[ERROR] lizardがインストールされていません。", file=sys.stderr)
         print("インストール: pip install lizard", file=sys.stderr)
         return 1, "", "lizard not found"
 
@@ -159,7 +159,7 @@ def generate_summary_report(stdout, output_dir):
             "high_complexity_functions": high_complexity_functions
         }, f, indent=2, ensure_ascii=False)
     
-    print(f"✅ サマリーレポートを生成しました: {summary_file}")
+    print(f"[INFO] サマリーレポートを生成しました: {summary_file}")
     
     return stats
 
@@ -229,7 +229,7 @@ def main():
         else:
             args.output = output_dir / f"complexity_{timestamp}.txt"
     
-    print(f"🔍 コード複雑度チェックを開始...")
+    print(f"[INFO] コード複雑度チェックを開始...")
     print(f"   対象: {', '.join(source_dirs)}")
     print(f"   閾値: {args.threshold}")
     print(f"   出力: {args.output}")
@@ -244,17 +244,17 @@ def main():
         verbose=args.verbose
     )
     
-    if return_code != 0:
-        print(f"❌ lizard実行でエラーが発生しました (終了コード: {return_code})")
-        if stderr:
-            print(f"エラー詳細: {stderr}")
+    # lizardのreturn codeは警告がある場合に0以外を返すが、これは正常動作
+    if return_code != 0 and stderr:
+        print(f"[ERROR] lizard実行でエラーが発生しました (終了コード: {return_code})")
+        print(f"エラー詳細: {stderr}")
         return return_code
     
     # サマリーレポート生成
     stats = generate_summary_report(stdout, output_dir)
     
     # 結果表示
-    print(f"\n📊 複雑度分析結果:")
+    print(f"\n[RESULTS] 複雑度分析結果:")
     print(f"   総関数数: {stats['total_functions']}")
     print(f"   高複雑度関数数: {stats['high_complexity_functions']}")
     print(f"   最大複雑度: {stats['max_complexity']}")
@@ -262,21 +262,21 @@ def main():
     
     # 複雑度分布
     dist = stats["complexity_distribution"]
-    print(f"\n📈 複雑度分布:")
-    print(f"   低 (≤5):    {dist['low']}")
-    print(f"   中 (6-10):  {dist['medium']}")  
-    print(f"   高 (11-20): {dist['high']}")
-    print(f"   超高 (>20): {dist['very_high']}")
+    print(f"\n[DISTRIBUTION] 複雑度分布:")
+    print(f"   低 (1-5):     {dist['low']}")
+    print(f"   中 (6-10):    {dist['medium']}")  
+    print(f"   高 (11-20):   {dist['high']}")
+    print(f"   超高 (21+):   {dist['very_high']}")
     
     # CI用チェック
     if args.ci:
         if stats['high_complexity_functions'] > 0:
-            print(f"\n❌ CI失敗: {stats['high_complexity_functions']}個の関数が複雑度閾値({args.threshold})を超過")
+            print(f"\n[FAIL] CI失敗: {stats['high_complexity_functions']}個の関数が複雑度閾値({args.threshold})を超過")
             return 1
         else:
-            print(f"\n✅ CI成功: すべての関数が複雑度閾値({args.threshold})以下")
+            print(f"\n[PASS] CI成功: すべての関数が複雑度閾値({args.threshold})以下")
     
-    print(f"\n📄 詳細レポート: {args.output}")
+    print(f"\n[REPORT] 詳細レポート: {args.output}")
     
     return return_code
 

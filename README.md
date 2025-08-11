@@ -2,7 +2,7 @@
 
 > **CSV形式の勤怠データを自動集計し、社員別・部門別レポートを生成するPythonツール**
 
-[![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
+[![Python Version](https://img.shields.io/badge/Python-3.13%2B-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Test Coverage](https://img.shields.io/badge/Coverage-89%25-brightgreen.svg)](docs/testing/COVERAGE_REPORT.md)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](dist/)
@@ -13,7 +13,7 @@
 
 ```bash
 # 1. リポジトリクローン
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 
 # 2. 実行ファイルで即座にテスト（Windows）
@@ -96,7 +96,7 @@ dist/attendance-tool-gui.exe
 ### 🔧 方法2: Python開発環境（カスタマイズ・開発用）
 
 #### 前提条件
-- **Python**: 3.8以上
+- **Python**: 3.13以上
 - **OS**: Windows 10/11, macOS, Linux
 - **メモリ**: 1GB以上
 - **ディスク**: 500MB以上
@@ -105,7 +105,7 @@ dist/attendance-tool-gui.exe
 
 ```bash
 # 1. プロジェクトクローン
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 
 # 2. 仮想環境作成・アクティベート
@@ -205,7 +205,7 @@ dist/attendance-tool-gui.exe
 
 ```bash
 # 1. プロジェクトセットアップ
-git clone <repository-url>
+git clone https://github.com/kumab2221/attendance-tool.git
 cd attendance-tool
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
@@ -270,19 +270,21 @@ git push origin feature/new-feature
 コード品質の維持のため、循環的複雑度を継続的に監視しています。
 
 ```bash
-# 基本的な複雑度チェック（閾値: 10）
-make complexity
+# Unix/Linux/macOS
+make complexity              # 基本的な複雑度チェック（閾値: 10）
+make complexity-report       # 詳細なHTMLレポート生成
+make complexity-ci          # CI用チェック（閾値超過で失敗）
 
-# 詳細なHTMLレポート生成
-make complexity-report
-# 生成場所: reports/complexity/complexity_report.html
+# Windows（make.cmdまたはmake.batを使用）
+.\make.cmd complexity        # 基本的な複雑度チェック
+.\make.cmd complexity-report # HTMLレポート生成  
+.\make.cmd complexity-ci     # CI用チェック
 
-# CI用チェック（閾値超過で失敗）
-make complexity-ci
-
-# 手動実行（カスタム閾値）
+# 手動実行（全OS共通・カスタム閾値）
 python scripts/complexity_check.py --threshold 15 --verbose
 ```
+
+**生成場所**: `reports/complexity/complexity_report.html`
 
 #### 📊 複雑度分布の目安
 
@@ -297,7 +299,8 @@ python scripts/complexity_check.py --threshold 15 --verbose
 
 ```bash
 # リリース前の必須チェック
-make pre-release
+make pre-release           # Unix/Linux/macOS
+.\make.cmd pre-release     # Windows
 
 # 実行内容:
 # 1. コードフォーマット・リント (black, mypy, flake8)
