@@ -4,9 +4,9 @@ AttendanceRecordモデルとカスタム例外クラスを定義
 pydantic風のAPIを提供するが、内部実装は標準ライブラリベース
 """
 
-from datetime import date, time, datetime, timedelta
-from typing import Optional, Any, Dict
 import re
+from datetime import date, datetime, time, timedelta
+from typing import Any, Dict, Optional
 
 
 # カスタム例外クラス
@@ -134,7 +134,9 @@ class AttendanceRecord:
             raise ValidationError("勤務日は必須です", field="work_date")
 
         if not isinstance(v, date):
-            raise ValidationError("勤務日は日付型である必要があります", field="work_date")
+            raise ValidationError(
+                "勤務日は日付型である必要があります", field="work_date"
+            )
 
         today = date.today()
 
@@ -161,7 +163,9 @@ class AttendanceRecord:
                 return v  # 変換できない場合はそのまま返す
 
         if v < 0:
-            raise ValidationError("休憩時間は0以上である必要があります", field="break_minutes")
+            raise ValidationError(
+                "休憩時間は0以上である必要があります", field="break_minutes"
+            )
 
         # 24時間を超える休憩時間（1440分以上）
         if v >= 1440:

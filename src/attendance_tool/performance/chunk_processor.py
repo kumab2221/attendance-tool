@@ -2,11 +2,12 @@
 チャンク処理機能
 """
 
-import pandas as pd
-import psutil
-from typing import Iterator, List, Optional, Any
 import math
 from dataclasses import dataclass
+from typing import Any, Iterator, List, Optional
+
+import pandas as pd
+import psutil
 
 
 @dataclass

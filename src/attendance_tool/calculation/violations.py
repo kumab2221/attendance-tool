@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, List
+from typing import Any, List, Optional
 
 
 class ViolationLevel(Enum):

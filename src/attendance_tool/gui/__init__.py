@@ -5,8 +5,8 @@
 tkinterを使用してクロスプラットフォーム対応のデスクトップアプリケーションを構築します。
 """
 
-from .main_window import MainWindow
 from .file_dialogs import FileDialogs
+from .main_window import MainWindow
 from .progress_window import ProgressWindow
 from .settings_window import SettingsWindow
 

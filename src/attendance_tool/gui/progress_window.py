@@ -4,10 +4,10 @@
 処理の進捗状況を視覚的に表示するウィンドウを提供します。
 """
 
+import time
 import tkinter as tk
 from tkinter import ttk
 from typing import Optional
-import time
 
 
 class ProgressWindow:

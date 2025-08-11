@@ -3,23 +3,25 @@ Red Phase Tests for ParallelBatchProcessor - TASK-501
 These tests are designed to FAIL until the ParallelBatchProcessor class is implemented.
 """
 
-import pytest
-import pandas as pd
-from datetime import datetime, date
-from unittest.mock import MagicMock, patch, Mock
-from typing import Dict, List, Tuple
 import concurrent.futures
+import multiprocessing as mp
 import threading
 import time
+from datetime import date, datetime
+from typing import Dict, List, Tuple
+from unittest.mock import MagicMock, Mock, patch
+
+import pandas as pd
 import psutil
-import multiprocessing as mp
+import pytest
+
+from attendance_tool.models import AttendanceRecord, AttendanceSummary
 
 # These imports will fail because the classes don't exist yet
 from attendance_tool.performance.parallel_processor import (
     ParallelBatchProcessor,
     SharedMemoryManager,
 )
-from attendance_tool.models import AttendanceRecord, AttendanceSummary
 
 
 class TestParallelBatchProcessor:

@@ -4,18 +4,19 @@ TASK-102: データ検証・クレンジング機能のTDDテスト
 このファイルは失敗するテスト（Red Phase）から始まります
 """
 
-import pytest
-import pandas as pd
 import os
 from datetime import date, timedelta
 from unittest.mock import Mock, patch
 
+import pandas as pd
+import pytest
+
 # まだ実装されていないため、ImportErrorが発生する予定
 try:
+    from attendance_tool.data.csv_reader import CSVReader
+    from attendance_tool.validation.cleaner import DataCleaner
     from attendance_tool.validation.enhanced_csv_reader import EnhancedCSVReader
     from attendance_tool.validation.validator import DataValidator
-    from attendance_tool.validation.cleaner import DataCleaner
-    from attendance_tool.data.csv_reader import CSVReader
 except ImportError:
     # Red Phase: モジュールが存在しないため、テストは失敗する
     EnhancedCSVReader = None

@@ -3,23 +3,25 @@ Red Phase Tests for AdaptiveChunking - TASK-501
 These tests are designed to FAIL until the AdaptiveChunking class is implemented.
 """
 
-import pytest
-import pandas as pd
-from datetime import datetime, date
-from unittest.mock import MagicMock, patch, Mock
-from typing import Iterator, List
-import psutil
-import time
 import gc
+import time
+from datetime import date, datetime
+from typing import Iterator, List
+from unittest.mock import MagicMock, Mock, patch
+
+import pandas as pd
+import psutil
+import pytest
+
+from attendance_tool.models import AttendanceRecord
 
 # These imports will fail because the classes don't exist yet
 from attendance_tool.performance.chunk_processor import (
     AdaptiveChunking,
+    ChunkProcessingResult,
     OptimizedCSVProcessor,
     ProcessingChunk,
-    ChunkProcessingResult,
 )
-from attendance_tool.models import AttendanceRecord
 
 
 class TestAdaptiveChunking:

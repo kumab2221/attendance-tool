@@ -3,27 +3,29 @@ Red Phase Tests for PerformanceOptimizedCalculator - TASK-501
 These tests are designed to FAIL until the PerformanceOptimizedCalculator class is implemented.
 """
 
-import pytest
-import pandas as pd
-from datetime import datetime, date, timedelta
-from unittest.mock import MagicMock, patch, Mock
-from typing import Dict, List, Optional
-import time
-import psutil
-import threading
 import gc
+import threading
+import time
+from datetime import date, datetime, timedelta
+from typing import Dict, List, Optional
+from unittest.mock import MagicMock, Mock, patch
+
+import pandas as pd
+import psutil
+import pytest
+
+from attendance_tool.calculation.calculator import AttendanceCalculator
+from attendance_tool.models import AttendanceRecord, AttendanceSummary
+from attendance_tool.performance.models import (
+    PerformanceConfig,
+    PerformanceMetrics,
+    PerformanceReport,
+)
 
 # This import will fail because PerformanceOptimizedCalculator doesn't exist yet
 from attendance_tool.performance.optimized_calculator import (
     PerformanceOptimizedCalculator,
 )
-from attendance_tool.performance.models import (
-    PerformanceConfig,
-    PerformanceReport,
-    PerformanceMetrics,
-)
-from attendance_tool.models import AttendanceRecord, AttendanceSummary
-from attendance_tool.calculation.calculator import AttendanceCalculator
 
 
 class TestPerformanceOptimizedCalculator:

@@ -1,7 +1,7 @@
 """就業規則エンジン - Red Phase実装"""
 
-from typing import Dict, Any, List
 from datetime import date, time
+from typing import Any, Dict, List
 
 from ..validation.models import AttendanceRecord
 
@@ -116,7 +116,7 @@ class WorkRulesEngine:
         # 法定労働時間チェック（8時間 = 480分）
         legal_limit = self.get_daily_legal_minutes()
         if work_minutes > legal_limit:
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             violation = WorkRuleViolation(
                 violation_type="daily_overtime",
@@ -134,7 +134,7 @@ class WorkRulesEngine:
         # 異常労働時間チェック（12時間 = 720分）
         warning_limit = self.get_daily_warning_minutes()
         if work_minutes > warning_limit:
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             violation = WorkRuleViolation(
                 violation_type="excessive_daily_work",
@@ -151,7 +151,7 @@ class WorkRulesEngine:
 
         # 24時間勤務チェック
         if work_minutes >= 1440:  # 24時間 = 1440分
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             violation = WorkRuleViolation(
                 violation_type="24_hour_work",
@@ -193,7 +193,7 @@ class WorkRulesEngine:
             )
 
             if total_week_minutes > legal_weekly_limit:
-                from .violations import WorkRuleViolation, ViolationLevel
+                from .violations import ViolationLevel, WorkRuleViolation
 
                 level = (
                     ViolationLevel.CRITICAL
@@ -252,7 +252,7 @@ class WorkRulesEngine:
         )
 
         if total_overtime_minutes > monthly_limit:
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             if total_overtime_minutes > special_limit:
                 level = ViolationLevel.CRITICAL
@@ -309,7 +309,7 @@ class WorkRulesEngine:
 
         # 休憩時間不足チェック
         if required_break > 0 and actual_break < required_break:
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             # 法的根拠の決定
             if work_minutes > 8 * 60:  # 8時間超
@@ -377,7 +377,7 @@ class WorkRulesEngine:
                 )
 
                 if consecutive_days > warning_days:
-                    from .violations import WorkRuleViolation, ViolationLevel
+                    from .violations import ViolationLevel, WorkRuleViolation
 
                     # 違反レベルの決定
                     if consecutive_days >= critical_days:
@@ -421,7 +421,7 @@ class WorkRulesEngine:
         night_work_minutes = self._calculate_night_work_minutes(record)
 
         if night_work_minutes > 0:
-            from .violations import WorkRuleViolation, ViolationLevel
+            from .violations import ViolationLevel, WorkRuleViolation
 
             violation = WorkRuleViolation(
                 violation_type="night_work",
@@ -451,7 +451,7 @@ class WorkRulesEngine:
         if is_weekend or is_national_holiday:
             work_minutes = record.get_work_duration_minutes()
             if work_minutes and work_minutes > 0:
-                from .violations import WorkRuleViolation, ViolationLevel
+                from .violations import ViolationLevel, WorkRuleViolation
 
                 holiday_type = "国民の祝日" if is_national_holiday else "土日"
                 violation = WorkRuleViolation(
@@ -592,8 +592,8 @@ class WorkRulesEngine:
         self, records: List["AttendanceRecord"]
     ) -> Dict[date, List["AttendanceRecord"]]:
         """レコードを週ごとにグループ化"""
-        from datetime import timedelta
         from collections import defaultdict
+        from datetime import timedelta
 
         weekly_groups = defaultdict(list)
 

@@ -4,9 +4,9 @@
 このテストはRed Phase用で、すべて失敗することを確認する
 """
 
-import unittest
-import sys
 import json
+import sys
+import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 

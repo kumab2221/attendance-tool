@@ -4,9 +4,11 @@
 """
 
 import re
-import pandas as pd
 from dataclasses import dataclass, field
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
+import pandas as pd
+
 from .rules import ValidationError, ValidationWarning
 from .validator import ValidationReport
 
@@ -296,10 +298,10 @@ class DataCleaner:
         # アルファベット名前の変換（簡易実装）- 空白除去前に実行
         name_cleaning_config = self.config.get("name_cleaning", {})
         should_normalize_alphabet = (
-            self.cleaning_level == "aggressive" 
+            self.cleaning_level == "aggressive"
             or name_cleaning_config.get("normalize_alphabet", False)
         )
-        
+
         if should_normalize_alphabet:
             # "YAMADA Hanako" → "山田花子" のような変換は複雑なので、
             # 現在は簡易的に実装
@@ -322,9 +324,7 @@ class DataCleaner:
     def _clean_break_time(self, df: pd.DataFrame) -> pd.DataFrame:
         """休憩時間フォーマット統一"""
         if "break_time" in df.columns:
-            df["break_time"] = df["break_time"].apply(
-                self._normalize_break_time
-            )
+            df["break_time"] = df["break_time"].apply(self._normalize_break_time)
         return df
 
     def _normalize_break_time(self, break_time: Any) -> int:
@@ -337,7 +337,7 @@ class DataCleaner:
             return int(break_time)
 
         break_time_str = str(break_time).strip()
-        
+
         # 時間:分フォーマット（例: "1:00", "1:30"）
         if ":" in break_time_str:
             try:
@@ -348,7 +348,7 @@ class DataCleaner:
                     return hours * 60 + minutes
             except ValueError:
                 pass
-        
+
         # 単位付きフォーマット（例: "60分", "1時間"）
         if "分" in break_time_str:
             try:
@@ -356,7 +356,7 @@ class DataCleaner:
                 return value
             except ValueError:
                 pass
-        
+
         if "時間" in break_time_str:
             try:
                 value = int(re.sub(r"[^0-9]", "", break_time_str))

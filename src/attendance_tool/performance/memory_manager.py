@@ -3,14 +3,15 @@
 """
 
 import gc
+import threading
+from collections import defaultdict
+from contextlib import contextmanager
+from datetime import datetime
+from typing import Any, Dict, Generic, Iterator, List, Optional, TypeVar
+from weakref import WeakSet
+
 import pandas as pd
 import psutil
-import threading
-from contextlib import contextmanager
-from typing import Any, Optional, Dict, List, Iterator, TypeVar, Generic
-from datetime import datetime
-from collections import defaultdict
-from weakref import WeakSet
 
 T = TypeVar("T")
 

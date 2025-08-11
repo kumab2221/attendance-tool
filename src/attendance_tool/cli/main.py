@@ -1,28 +1,30 @@
 """メインCLIエントリーポイント"""
 
-import click
 from pathlib import Path
+
+import click
 
 try:
     from attendance_tool import __version__
-    from attendance_tool.utils.config import setup_logging, get_environment
+    from attendance_tool.utils.config import get_environment, setup_logging
+
+    from .progress import ProcessingSteps, ProgressBar, show_processing_summary
     from .validators import (
         ValidationError,
-        validate_option_combinations,
+        validate_chunk_size,
+        validate_date_range,
+        validate_formats,
         validate_input_file,
         validate_month_format,
-        validate_date_range,
-        validate_year_range,
+        validate_option_combinations,
         validate_output_path,
-        validate_formats,
         validate_report_types,
-        validate_chunk_size,
+        validate_year_range,
     )
-    from .progress import ProgressBar, ProcessingSteps, show_processing_summary
 except ImportError:
     # PyInstallerでの実行時のフォールバック
-    import sys
     import os
+    import sys
 
     sys.path.append(os.path.dirname(__file__))
     __version__ = "0.1.0"
@@ -33,19 +35,19 @@ except ImportError:
     def get_environment():
         return "production"
 
+    from progress import ProcessingSteps, ProgressBar, show_processing_summary
     from validators import (
         ValidationError,
-        validate_option_combinations,
+        validate_chunk_size,
+        validate_date_range,
+        validate_formats,
         validate_input_file,
         validate_month_format,
-        validate_date_range,
-        validate_year_range,
+        validate_option_combinations,
         validate_output_path,
-        validate_formats,
         validate_report_types,
-        validate_chunk_size,
+        validate_year_range,
     )
-    from progress import ProgressBar, ProcessingSteps, show_processing_summary
 
 
 @click.group(invoke_without_command=True)

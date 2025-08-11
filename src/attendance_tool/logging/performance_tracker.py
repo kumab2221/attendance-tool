@@ -3,10 +3,11 @@
 TASK-402: Green Phase - 最小実装
 """
 
-import time
-import psutil
 import os
+import time
 from typing import Optional
+
+import psutil
 
 
 class PerformanceTracker:

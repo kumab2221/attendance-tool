@@ -7,12 +7,13 @@ CSVファイルの読み込みから最終的なレポート出力まで、
 """
 
 import os
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
-from typing import Dict, Any
-import pytest
+from typing import Any, Dict
+
 import pandas as pd
+import pytest
 from click.testing import CliRunner
 
 from attendance_tool.cli import main
@@ -91,8 +92,8 @@ class TestE2EIntegration:
         - 権限不足
         - ディスク容量不足（シミュレート）
         """
-        from attendance_tool.e2e.workflow_coordinator import E2EWorkflowCoordinator
         from attendance_tool.e2e.test_data_manager import TestDataManager
+        from attendance_tool.e2e.workflow_coordinator import E2EWorkflowCoordinator
 
         coordinator = E2EWorkflowCoordinator()
         data_manager = TestDataManager()
@@ -123,8 +124,8 @@ class TestE2EIntegration:
         - 100名×1か月データを5分以内で処理
         - メモリ使用量1GB以下
         """
-        from attendance_tool.e2e.workflow_coordinator import E2EWorkflowCoordinator
         from attendance_tool.e2e.test_data_manager import TestDataManager
+        from attendance_tool.e2e.workflow_coordinator import E2EWorkflowCoordinator
 
         # 大容量データが提供されていない場合は作成
         if large_dataset is None:

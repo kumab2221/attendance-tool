@@ -3,21 +3,22 @@
 TASK-103 Green Phase実装
 """
 
-import pandas as pd
-from datetime import date, datetime
-from typing import Union, Optional, List
 import time
+from datetime import date, datetime
+from typing import List, Optional, Union
+
+import pandas as pd
 from dateutil.parser import parse as date_parse
 from dateutil.relativedelta import relativedelta
 
 from .models import (
-    PeriodSpecification,
-    PeriodType,
-    FilterResult,
     DateFilterConfig,
     DateFilterError,
-    InvalidPeriodError,
     DateRangeError,
+    FilterResult,
+    InvalidPeriodError,
+    PeriodSpecification,
+    PeriodType,
 )
 
 
@@ -243,7 +244,10 @@ class DateFilter:
             except Exception as e:
                 # Check if this is a "day is out of range for month" error (nonexistent date)
                 error_msg = str(e).lower()
-                if "day is out of range for month" in error_msg or "存在しない" in error_msg:
+                if (
+                    "day is out of range for month" in error_msg
+                    or "存在しない" in error_msg
+                ):
                     raise InvalidPeriodError(f"存在しない日付: {date_input}")
                 else:
                     raise InvalidPeriodError(f"無効な日付フォーマット: {date_input}")

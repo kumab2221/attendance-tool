@@ -1,9 +1,9 @@
 """標準テストデータ - 社員別集計用"""
 
 from datetime import date
-from attendance_tool.calculation.summary import AttendanceSummary
-from attendance_tool.calculation.department_summary import DepartmentSummary
 
+from attendance_tool.calculation.department_summary import DepartmentSummary
+from attendance_tool.calculation.summary import AttendanceSummary
 
 STANDARD_EMPLOYEE_DATA = [
     AttendanceSummary(

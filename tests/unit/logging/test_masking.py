@@ -4,6 +4,7 @@ TASK-402: Red Phase - 失敗するテスト実装
 """
 
 import pytest
+
 from attendance_tool.logging.masking import PIIMasker
 
 

@@ -2,21 +2,21 @@
 
 import logging
 import time
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.workbook.workbook import Workbook as OpenpyxlWorkbook
-from openpyxl.styles import Font, PatternFill, Border, Side
-from openpyxl.formatting.rule import CellIsRule
 from openpyxl.chart import BarChart, Reference
+from openpyxl.formatting.rule import CellIsRule
+from openpyxl.styles import Border, Font, PatternFill, Side
+from openpyxl.workbook.workbook import Workbook as OpenpyxlWorkbook
 
-from .models import ExportResult, ExcelExportConfig, ConditionalFormat
-from ..utils.config import ConfigManager
-from ..calculation.summary import AttendanceSummary
 from ..calculation.department_summary import DepartmentSummary
-
+from ..calculation.summary import AttendanceSummary
+from ..utils.config import ConfigManager
+from .models import ConditionalFormat, ExcelExportConfig, ExportResult
 
 logger = logging.getLogger(__name__)
 

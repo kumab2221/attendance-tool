@@ -4,10 +4,11 @@ E2Eワークフローコーディネーター
 統合テスト用のワークフロー実行を管理する。
 """
 
-import time
 import tempfile
+import time
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
 from click.testing import CliRunner
 
@@ -174,8 +175,9 @@ class E2EWorkflowCoordinator:
         self, input_file: Path, output_dir: Path, month: str
     ) -> Dict[str, Any]:
         """パフォーマンス測定付きでワークフローを実行"""
-        import psutil
         import os
+
+        import psutil
 
         process = psutil.Process(os.getpid())
         memory_before = process.memory_info().rss / 1024 / 1024  # MB

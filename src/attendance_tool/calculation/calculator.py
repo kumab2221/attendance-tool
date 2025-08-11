@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import List, Optional, Dict, Any
 from datetime import date
+from typing import Any, Dict, List, Optional
 
 from ..validation.models import AttendanceRecord
 from .summary import AttendanceSummary

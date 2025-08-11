@@ -4,9 +4,10 @@ TASK-103 Green Phase実装
 """
 
 from dataclasses import dataclass
-from typing import Union, Optional, Tuple, Dict, Any
 from datetime import date, datetime
 from enum import Enum
+from typing import Any, Dict, Optional, Tuple, Union
+
 import pandas as pd
 
 

@@ -3,11 +3,13 @@
 このテストは失敗することを確認するためのもの
 """
 
-import pytest
 from datetime import date, time
+
+import pytest
+
 from src.attendance_tool.calculation.calculator import (
-    AttendanceCalculator,
     AttendanceCalculationError,
+    AttendanceCalculator,
 )
 from src.attendance_tool.calculation.summary import AttendanceSummary
 from src.attendance_tool.validation.models import AttendanceRecord

@@ -4,17 +4,17 @@
 このテストはRed Phase用で、すべて失敗することを確認する
 """
 
-import unittest
+import os
 import sys
 import tempfile
-import os
+import unittest
 from pathlib import Path
 
 # パス設定
 sys.path.append(str(Path(__file__).parent.parent.parent.parent / "src"))
 
-from attendance_tool.errors.handler import ErrorHandler
 from attendance_tool.cli.main import main
+from attendance_tool.errors.handler import ErrorHandler
 
 
 class TestErrorIntegration(unittest.TestCase):
@@ -54,10 +54,10 @@ class TestErrorIntegration(unittest.TestCase):
 
     def test_module_error_consistency(self):
         """モジュール間エラーハンドリング一貫性テスト (TC-401-041)"""
-        from attendance_tool.data.csv_reader import CSVReader
-        from attendance_tool.validation.validator import DataValidator
         from attendance_tool.calculation.calculator import AttendanceCalculator
+        from attendance_tool.data.csv_reader import CSVReader
         from attendance_tool.output.excel_exporter import ExcelExporter
+        from attendance_tool.validation.validator import DataValidator
 
         # 各モジュールでのエラーハンドリング統一確認
         modules = [

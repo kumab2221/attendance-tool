@@ -2,15 +2,16 @@
 期間仕様モデル単体テスト - Red Phase実装
 """
 
-import pytest
 from datetime import date, datetime
+
+import pytest
 
 # テスト対象のインポート（Red Phase実装時点では失敗する）
 try:
     from src.attendance_tool.filtering.models import (
+        InvalidPeriodError,
         PeriodSpecification,
         PeriodType,
-        InvalidPeriodError,
     )
 except ImportError as e:
     pytest.skip(f"期間仕様モデル未実装: {e}", allow_module_level=True)

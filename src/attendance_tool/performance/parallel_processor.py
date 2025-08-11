@@ -4,7 +4,8 @@
 
 import multiprocessing as mp
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-from typing import Dict, List, Optional, Literal, Any, Union
+from typing import Any, Dict, List, Literal, Optional, Union
+
 import pandas as pd
 
 

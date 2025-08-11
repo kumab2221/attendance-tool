@@ -1,14 +1,15 @@
-import pytest
-import pandas as pd
-from unittest.mock import patch, MagicMock
 import gc
-import psutil
 import time
+from unittest.mock import MagicMock, patch
+
+import pandas as pd
+import psutil
+import pytest
 
 from attendance_tool.performance.memory_manager import (
+    GCOptimizer,
     MemoryPool,
     StreamingProcessor,
-    GCOptimizer,
 )
 
 

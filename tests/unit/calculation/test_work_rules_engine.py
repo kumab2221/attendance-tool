@@ -1,7 +1,9 @@
 """就業規則エンジンテスト - Red Phase実装"""
 
-import pytest
 from datetime import date, time
+
+import pytest
+
 from src.attendance_tool.calculation.work_rules_engine import WorkRulesEngine
 
 

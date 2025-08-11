@@ -2,9 +2,10 @@
 フィルタリング結果モデル単体テスト - Red Phase実装
 """
 
-import pytest
-import pandas as pd
 from datetime import date
+
+import pandas as pd
+import pytest
 
 # テスト対象のインポート（Red Phase実装時点では失敗する）
 try:

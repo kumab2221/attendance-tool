@@ -4,21 +4,21 @@
 このテストはRed Phase用で、すべて失敗することを確認する
 """
 
-import unittest
 import sys
+import unittest
 from pathlib import Path
 
 # パス設定
 sys.path.append(str(Path(__file__).parent.parent.parent.parent / "src"))
 
-from attendance_tool.errors.handler import ErrorHandler
 from attendance_tool.errors.exceptions import (
     AttendanceToolError,
-    SystemError,
-    DataError,
     BusinessError,
+    DataError,
+    SystemError,
     UserError,
 )
+from attendance_tool.errors.handler import ErrorHandler
 
 
 class TestErrorClassification(unittest.TestCase):
@@ -63,7 +63,7 @@ class TestErrorClassification(unittest.TestCase):
 
     def test_data_error_classification(self):
         """データエラーの分類テスト (TC-401-002)"""
-        from attendance_tool.validation.models import ValidationError, TimeLogicError
+        from attendance_tool.validation.models import TimeLogicError, ValidationError
 
         test_cases = [
             {

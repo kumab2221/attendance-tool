@@ -5,12 +5,12 @@ GUI コンポーネントのテストは特別な考慮が必要です。
 実際の GUI を表示せずにテストできるよう、モック化を活用します。
 """
 
-import unittest
-from unittest.mock import Mock, patch, MagicMock
-import tkinter as tk
-from pathlib import Path
-import tempfile
 import os
+import tempfile
+import tkinter as tk
+import unittest
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
 
 # テスト用に GUI 関連の import エラーを処理
 try:

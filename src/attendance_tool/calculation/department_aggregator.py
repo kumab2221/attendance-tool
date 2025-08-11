@@ -1,17 +1,17 @@
 """部門別集計エンジン - Green Phase実装"""
 
-from typing import List, Dict, Optional, Set
-from datetime import date
 import logging
 from collections import defaultdict
+from datetime import date
+from typing import Dict, List, Optional, Set
 
-from .department import Department, CircularReferenceError, DepartmentValidationError
+from ..validation.models import AttendanceRecord
+from .department import CircularReferenceError, Department, DepartmentValidationError
 from .department_summary import (
-    DepartmentSummary,
     DepartmentComparison,
     DepartmentReport,
+    DepartmentSummary,
 )
-from ..validation.models import AttendanceRecord
 
 
 class DepartmentAggregator:

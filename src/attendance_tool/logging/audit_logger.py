@@ -3,11 +3,11 @@
 TASK-402: Green Phase - 最小実装
 """
 
-import uuid
 import hashlib
 import json
+import uuid
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class AuditLogger:

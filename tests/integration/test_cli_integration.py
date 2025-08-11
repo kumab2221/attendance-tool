@@ -3,11 +3,12 @@
 実際のファイル操作とCLI実行を含む統合テスト
 """
 
-import pytest
-import tempfile
-import os
 import csv
+import os
+import tempfile
 from pathlib import Path
+
+import pytest
 from click.testing import CliRunner
 
 from attendance_tool.cli import main

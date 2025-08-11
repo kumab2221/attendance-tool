@@ -3,11 +3,12 @@
 実際の設定ファイルを使用した統合テスト
 """
 
-import pytest
-from pathlib import Path
 import logging
+from pathlib import Path
 
-from attendance_tool.utils.config import ConfigManager, ConfigError
+import pytest
+
+from attendance_tool.utils.config import ConfigError, ConfigManager
 
 
 class TestConfigIntegration:

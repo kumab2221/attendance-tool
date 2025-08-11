@@ -4,12 +4,12 @@
 YAMLファイルの設定値を環境変数で上書きできる。
 """
 
-import os
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-import yaml
 
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ class ConfigManager:
             default_config = self._get_default_config(config_name)
             if not default_config:  # 空の辞書の場合（未知の設定名）
                 raise ConfigError(f"設定ファイルが見つかりません: {config_file}")
-            
+
             # デフォルト設定を使用
             config_data = default_config
             self._configs[config_name] = config_data

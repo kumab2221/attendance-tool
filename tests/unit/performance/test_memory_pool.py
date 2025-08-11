@@ -3,10 +3,11 @@ Red Phase Tests for MemoryPool - TASK-501
 These tests are designed to FAIL until the MemoryPool class is implemented.
 """
 
-import pytest
-import pandas as pd
 from datetime import datetime
 from unittest.mock import MagicMock, patch
+
+import pandas as pd
+import pytest
 
 # This import will fail because MemoryPool doesn't exist yet
 from attendance_tool.performance.memory_manager import MemoryPool

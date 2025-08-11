@@ -4,7 +4,8 @@ TASK-402: Refactor Phase - 設定ベース改善版
 """
 
 import re
-from typing import Dict, List, Pattern, Optional
+from typing import Dict, List, Optional, Pattern
+
 from .config import LoggingConfig
 
 

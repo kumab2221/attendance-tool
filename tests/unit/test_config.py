@@ -2,12 +2,13 @@
 
 import os
 import tempfile
-import pytest
 from pathlib import Path
-from unittest.mock import patch, mock_open
+from unittest.mock import mock_open, patch
+
+import pytest
 import yaml
 
-from attendance_tool.utils.config import ConfigManager, ConfigError, get_config
+from attendance_tool.utils.config import ConfigError, ConfigManager, get_config
 
 
 class TestConfigManager:

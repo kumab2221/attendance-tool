@@ -3,9 +3,10 @@
 TASK-402: Red Phase - 失敗するテスト実装
 """
 
-import pytest
 import time
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 from attendance_tool.logging.performance_tracker import PerformanceTracker
 

@@ -3,9 +3,9 @@
 """
 
 from dataclasses import dataclass
-from datetime import datetime, date, time
-from typing import Optional, List, Dict, Any
+from datetime import date, datetime, time
 from decimal import Decimal
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

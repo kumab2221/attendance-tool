@@ -1,8 +1,9 @@
 """プログレスバー表示機能"""
 
-import click
-from typing import Optional, Any
 import sys
+from typing import Any, Optional
+
+import click
 
 
 class ProgressBar:

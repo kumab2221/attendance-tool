@@ -4,9 +4,10 @@ TASK-402: Refactor Phase - 設定管理システム
 """
 
 import os
-import yaml
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any, Dict, Optional
+
+import yaml
 
 
 class LoggingConfig:

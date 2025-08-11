@@ -4,12 +4,17 @@ TASK-102: データ検証・クレンジング機能のTDDテスト
 このファイルは失敗するテスト（Red Phase）から始まります
 """
 
-import pytest
 from datetime import date, time, timedelta
+
+import pytest
 
 # まだ実装されていないため、ImportErrorが発生する予定
 try:
-    from attendance_tool.validation.models import AttendanceRecord, TimeLogicError, ValidationError
+    from attendance_tool.validation.models import (
+        AttendanceRecord,
+        TimeLogicError,
+        ValidationError,
+    )
 except ImportError:
     # Red Phase: モジュールが存在しないため、テストは失敗する
     AttendanceRecord = None

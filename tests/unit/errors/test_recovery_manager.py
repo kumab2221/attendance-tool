@@ -4,11 +4,11 @@
 このテストはRed Phase用で、すべて失敗することを確認する
 """
 
-import unittest
 import sys
+import time
+import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
-import time
 
 # パス設定
 sys.path.append(str(Path(__file__).parent.parent.parent.parent / "src"))

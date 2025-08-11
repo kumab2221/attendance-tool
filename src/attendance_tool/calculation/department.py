@@ -1,8 +1,8 @@
 """部門モデル - Green Phase実装"""
 
-from dataclasses import dataclass
-from typing import Optional, List
 import re
+from dataclasses import dataclass
+from typing import List, Optional
 
 
 @dataclass

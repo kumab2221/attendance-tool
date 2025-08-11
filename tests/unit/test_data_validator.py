@@ -4,21 +4,22 @@ TASK-102: データ検証・クレンジング機能のTDDテスト
 このファイルは失敗するテスト（Red Phase）から始まります
 """
 
-import pytest
-import pandas as pd
 import time
 from datetime import date, timedelta
-from typing import List, Dict
+from typing import Dict, List
+
+import pandas as pd
+import pytest
 
 # まだ実装されていないため、ImportErrorが発生する予定
 try:
+    from attendance_tool.validation.rules import ValidationRule
     from attendance_tool.validation.validator import (
         DataValidator,
-        ValidationReport,
         ValidationError,
+        ValidationReport,
         ValidationWarning,
     )
-    from attendance_tool.validation.rules import ValidationRule
 except ImportError:
     # Red Phase: モジュールが存在しないため、テストは失敗する
     DataValidator = None

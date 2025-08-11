@@ -3,17 +3,19 @@ Red Phase Tests for StreamingProcessor - TASK-501
 These tests are designed to FAIL until the StreamingProcessor class is implemented.
 """
 
-import pytest
-import pandas as pd
-from datetime import datetime, date
-from unittest.mock import MagicMock, patch
-from typing import Iterator, List, Iterable
-import psutil
 import time
+from datetime import date, datetime
+from typing import Iterable, Iterator, List
+from unittest.mock import MagicMock, patch
+
+import pandas as pd
+import psutil
+import pytest
+
+from attendance_tool.models import AttendanceRecord, AttendanceSummary
 
 # This import will fail because StreamingProcessor doesn't exist yet
 from attendance_tool.performance.streaming_processor import StreamingProcessor
-from attendance_tool.models import AttendanceRecord, AttendanceSummary
 
 
 class TestStreamingProcessor:

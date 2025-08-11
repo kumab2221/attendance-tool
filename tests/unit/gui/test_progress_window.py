@@ -2,9 +2,9 @@
 プログレス表示ウィンドウの単体テスト
 """
 
+import time
 import unittest
 from unittest.mock import Mock, patch
-import time
 
 try:
     from attendance_tool.gui.progress_window import ProgressWindow

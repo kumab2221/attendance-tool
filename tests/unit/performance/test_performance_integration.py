@@ -1,5 +1,6 @@
-import pytest
 import pandas as pd
+import pytest
+
 from attendance_tool.performance.optimized_calculator import (
     PerformanceOptimizedCalculator,
 )

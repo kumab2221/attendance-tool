@@ -6,8 +6,9 @@
 
 import gc
 import time
-from typing import Callable, Any, List
-from .models import RecoveryResult, ProcessingResult, ErrorRecord
+from typing import Any, Callable, List
+
+from .models import ErrorRecord, ProcessingResult, RecoveryResult
 
 
 class RecoveryManager:

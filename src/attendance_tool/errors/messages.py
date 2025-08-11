@@ -5,6 +5,7 @@
 """
 
 from typing import List
+
 from attendance_tool.validation.models import ValidationError
 
 

@@ -6,7 +6,7 @@ TASK-402: Green Phase - 最小実装
 import json
 import uuid
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 
 class StructuredLogger:
