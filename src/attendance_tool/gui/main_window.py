@@ -25,6 +25,10 @@ class MainWindow:
         self.root.title("勤怠管理ツール")
         self.root.geometry("800x600")
         
+        # 変数の初期化（GUI要素作成前に実行）
+        self.input_file_path = tk.StringVar()
+        self.output_dir_path = tk.StringVar()
+        
         # コンポーネントの初期化
         self.file_dialogs = FileDialogs()
         self.progress_window = None
@@ -35,10 +39,6 @@ class MainWindow:
         
         # GUI要素の作成
         self._create_widgets()
-        
-        # 変数の初期化
-        self.input_file_path = tk.StringVar()
-        self.output_dir_path = tk.StringVar()
         
     def _create_widgets(self):
         """GUI要素を作成"""

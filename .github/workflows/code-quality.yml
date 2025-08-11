@@ -1,0 +1,164 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11"]  # 代表的なバージョンのみ
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[dev]
+        pip install chardet psutil
+    
+    - name: Run code formatting checks
+      run: |
+        echo "🔍 コードフォーマットチェック..."
+        black --check src/ tests/ scripts/
+        isort --check-only src/ tests/ scripts/
+    
+    - name: Run linting
+      run: |
+        echo "📝 コード品質チェック..."
+        flake8 src/ tests/ scripts/ --max-line-length=88 --extend-ignore=E203,W503
+        mypy src/ || true  # mypy警告は失敗させない
+    
+    - name: Run complexity analysis
+      run: |
+        echo "🧮 循環的複雑度チェック..."
+        python scripts/complexity_check.py --threshold 15 --ci
+    
+    - name: Generate complexity report
+      if: always()  # 失敗しても実行
+      run: |
+        echo "📊 複雑度レポート生成..."
+        python scripts/complexity_check.py --threshold 10 --format html --output complexity_report.html
+        python scripts/complexity_check.py --threshold 10 --format csv --output complexity_report.csv
+    
+    - name: Upload complexity reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: complexity-reports-${{ matrix.python-version }}
+        path: |
+          complexity_report.html
+          complexity_report.csv
+          reports/complexity/complexity_summary.json
+        retention-days: 30
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+    
+    - name: Run security scan with bandit
+      run: |
+        echo "🔒 セキュリティスキャン..."
+        bandit -r src/ -f json -o bandit-report.json || true
+        bandit -r src/ || true
+    
+    - name: Check for known security vulnerabilities
+      run: |
+        echo "🛡️ 既知の脆弱性チェック..."
+        safety check || true
+    
+    - name: Upload security report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: bandit-report.json
+        retention-days: 30
+
+  maintainability:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install radon xenon
+    
+    - name: Calculate maintainability index
+      run: |
+        echo "📏 保守性指数計算..."
+        radon mi src/ -s
+        radon cc src/ -s --min B
+        radon raw src/ -s
+    
+    - name: Generate maintainability report
+      run: |
+        echo "📋 保守性レポート生成..."
+        mkdir -p reports/maintainability
+        radon mi src/ -s -j > reports/maintainability/maintainability_index.json
+        radon cc src/ -s -j > reports/maintainability/cyclomatic_complexity.json
+        radon raw src/ -s -j > reports/maintainability/raw_metrics.json
+    
+    - name: Upload maintainability reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: maintainability-reports
+        path: reports/maintainability/
+        retention-days: 30
+
+  quality-summary:
+    needs: [code-quality, security-scan, maintainability]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Download all reports
+      uses: actions/download-artifact@v3
+    
+    - name: Generate quality summary
+      run: |
+        echo "# 📊 Code Quality Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🔍 Checks Performed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Code formatting and linting" >> $GITHUB_STEP_SUMMARY
+        echo "- 🧮 Cyclomatic complexity analysis" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔒 Security vulnerability scan" >> $GITHUB_STEP_SUMMARY
+        echo "- 📏 Maintainability index calculation" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📁 Generated Reports" >> $GITHUB_STEP_SUMMARY
+        echo "All quality reports have been uploaded as artifacts and are available for download." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Available Artifacts:" >> $GITHUB_STEP_SUMMARY
+        echo "- 🧮 Complexity Reports (HTML, CSV, JSON)" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔒 Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "- 📏 Maintainability Metrics" >> $GITHUB_STEP_SUMMARY

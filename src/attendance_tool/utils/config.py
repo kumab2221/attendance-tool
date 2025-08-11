@@ -33,9 +33,29 @@ class ConfigManager:
             config_dir: 設定ファイルディレクトリのパス
         """
         if config_dir is None:
-            # プロジェクトルートのconfigディレクトリを使用
-            project_root = Path(__file__).parent.parent.parent.parent
-            config_dir = project_root / "config"
+            # 実行ファイル対応: 複数のパスを試行
+            possible_paths = [
+                # 開発環境: プロジェクトルートのconfig
+                Path(__file__).parent.parent.parent.parent / "config",
+                # 実行ファイル: 実行ファイルと同じディレクトリのconfig
+                Path(__file__).parent / "config",
+                # 実行ファイル: sys.executableベース
+                Path(os.path.dirname(os.path.abspath(__file__))) / "config",
+                # 現在の作業ディレクトリ
+                Path.cwd() / "config"
+            ]
+            
+            # 存在するパスを見つける
+            config_dir = None
+            for path in possible_paths:
+                if path.exists() and path.is_dir():
+                    config_dir = path
+                    break
+            
+            # どれも見つからない場合はデフォルトパスを作成
+            if config_dir is None:
+                config_dir = Path.cwd() / "config"
+                config_dir.mkdir(exist_ok=True)
         
         self.config_dir = Path(config_dir)
         self._configs: Dict[str, Dict[str, Any]] = {}
@@ -45,9 +65,20 @@ class ConfigManager:
     
     def _ensure_log_directory(self) -> None:
         """ログディレクトリが存在することを確認"""
-        project_root = Path(__file__).parent.parent.parent.parent
-        log_dir = project_root / "logs"
-        log_dir.mkdir(exist_ok=True)
+        # 複数のパスを試行（実行ファイル対応）
+        possible_log_dirs = [
+            Path(__file__).parent.parent.parent.parent / "logs",
+            Path.cwd() / "logs",
+            Path.home() / ".attendance-tool" / "logs"
+        ]
+        
+        for log_dir in possible_log_dirs:
+            try:
+                log_dir.mkdir(parents=True, exist_ok=True)
+                if log_dir.exists():
+                    break
+            except (OSError, PermissionError):
+                continue
     
     def load_config(self, config_name: str, reload: bool = False) -> Dict[str, Any]:
         """設定ファイルを読み込む
@@ -68,7 +99,11 @@ class ConfigManager:
         config_file = self.config_dir / f"{config_name}.yaml"
         
         if not config_file.exists():
-            raise ConfigError(f"設定ファイルが見つかりません: {config_file}")
+            # 設定ファイルが見つからない場合はデフォルト設定を作成
+            config_data = self._get_default_config(config_name)
+            self._configs[config_name] = config_data
+            logger.warning(f"設定ファイルが見つからないため、デフォルト設定を使用します: {config_file}")
+            return config_data
         
         try:
             with open(config_file, 'r', encoding='utf-8') as f:
@@ -205,6 +240,76 @@ class ConfigManager:
         
         # 最後のキーに値を設定
         current[key_path[-1]] = value
+    
+    def _get_default_config(self, config_name: str) -> Dict[str, Any]:
+        """デフォルト設定を取得
+        
+        Args:
+            config_name: 設定名
+            
+        Returns:
+            デフォルト設定辞書
+        """
+        default_configs = {
+            'work_rules': {
+                'working_hours': {
+                    'standard_daily_minutes': 480,  # 8時間
+                    'standard_weekly_minutes': 2400,  # 40時間
+                    'legal_daily_limit_minutes': 960,  # 16時間
+                    'legal_weekly_limit_minutes': 3000,  # 50時間
+                    'overtime_threshold_minutes': 480,  # 8時間
+                },
+                'break_time': {
+                    'default_break_minutes': 60,  # 1時間
+                    'minimum_break_minutes': 30,  # 30分
+                    'break_threshold_hours': 6,  # 6時間以上で休憩必須
+                },
+                'validation': {
+                    'allow_past_days': 90,  # 90日前まで入力可能
+                    'allow_future_days': 7,  # 7日後まで入力可能
+                    'minimum_work_minutes': 30,  # 最低勤務時間
+                }
+            },
+            'logging': {
+                'version': 1,
+                'disable_existing_loggers': False,
+                'formatters': {
+                    'standard': {
+                        'format': '%(asctime)s [%(levelname)8s] %(name)s: %(message)s'
+                    }
+                },
+                'handlers': {
+                    'console': {
+                        'class': 'logging.StreamHandler',
+                        'level': 'INFO',
+                        'formatter': 'standard',
+                        'stream': 'ext://sys.stdout'
+                    }
+                },
+                'loggers': {
+                    'attendance_tool': {
+                        'level': 'INFO',
+                        'handlers': ['console'],
+                        'propagate': False
+                    }
+                },
+                'root': {
+                    'level': 'WARNING',
+                    'handlers': ['console']
+                }
+            },
+            'csv_format': {
+                'encoding': 'utf-8',
+                'delimiter': ',',
+                'date_format': '%Y-%m-%d',
+                'time_format': '%H:%M',
+                'required_columns': [
+                    '社員ID', '氏名', '部署', '日付', '出勤時刻', '退勤時刻'
+                ]
+            }
+        }
+        
+        return default_configs.get(config_name, {})
     
     def get_work_rules(self) -> Dict[str, Any]:
         """就業規則設定を取得

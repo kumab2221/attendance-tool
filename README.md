@@ -72,6 +72,7 @@ attendance-tool --help
 ### 📊 品質指標
 
 - **✅ テストカバレッジ**: 89.2%
+- **✅ 循環的複雑度**: 閾値10以下維持
 - **✅ 実装完了**: 25/25 タスク
 - **✅ テストケース**: 180個
 - **✅ パフォーマンス**: 100名×1ヶ月 < 5分
@@ -236,23 +237,85 @@ isort src tests            # import整理
 mypy src                   # 型チェック
 flake8 src tests          # リンター
 
-# 3. テスト実行
+# 3. コード複雑度チェック
+make complexity              # 基本的な複雑度チェック
+make complexity-report       # HTMLレポート生成
+make complexity-ci          # CI用（閾値超過で失敗）
+
+# 4. テスト実行
 pytest tests/unit/ -v      # 単体テスト
 pytest tests/integration/ # 統合テスト
 pytest tests/e2e/         # E2Eテスト
 
-# 4. カバレッジ確認
+# 5. カバレッジ確認
 pytest tests/ --cov=attendance_tool --cov-report=html
 open htmlcov/index.html    # カバレッジレポート確認
 
-# 5. ビルドテスト
+# 6. 品質レポート生成
+make quality-report        # カバレッジ + 複雑度の統合レポート
+
+# 7. ビルドテスト
 python build_scripts/build_exe.py  # 実行ファイル作成テスト
 
-# 6. コミット・プッシュ
+# 8. コミット・プッシュ
 git add .
 git commit -m "feat: add new feature"
 git push origin feature/new-feature
 ```
+
+### 📏 コード品質管理
+
+#### 🧮 循環的複雑度チェック（lizard）
+
+コード品質の維持のため、循環的複雑度を継続的に監視しています。
+
+```bash
+# 基本的な複雑度チェック（閾値: 10）
+make complexity
+
+# 詳細なHTMLレポート生成
+make complexity-report
+# 生成場所: reports/complexity/complexity_report.html
+
+# CI用チェック（閾値超過で失敗）
+make complexity-ci
+
+# 手動実行（カスタム閾値）
+python scripts/complexity_check.py --threshold 15 --verbose
+```
+
+#### 📊 複雑度分布の目安
+
+| 複雑度レベル | CCN範囲 | 状態 | 対応方針 |
+|------------|---------|------|----------|
+| **低** | 1-5 | ✅ 良好 | 維持 |
+| **中** | 6-10 | ⚠️ 注意 | レビュー強化 |
+| **高** | 11-20 | ❌ 要改善 | リファクタリング必須 |
+| **超高** | 21+ | 🚫 禁止 | 即座に分割 |
+
+#### 🔄 品質ゲート
+
+```bash
+# リリース前の必須チェック
+make pre-release
+
+# 実行内容:
+# 1. コードフォーマット・リント (black, mypy, flake8)
+# 2. 複雑度チェック (lizard, 閾値10)  
+# 3. 全テスト実行 (unit + integration + e2e)
+```
+
+#### 📈 CI/CD品質チェック
+
+GitHub Actionsで自動実行される品質チェック：
+
+- **🔍 コードフォーマット**: black, isort
+- **📝 静的解析**: mypy, flake8
+- **🧮 複雑度チェック**: lizard（閾値15）
+- **🔒 セキュリティスキャン**: bandit, safety
+- **📏 保守性指数**: radon
+
+レポートは各PR実行時にArtifactとしてダウンロード可能です。
 
 ### 📁 重要なディレクトリ構造
 
@@ -274,6 +337,10 @@ attendance-tool/
 │   ├── testing/              # テスト関連ドキュメント
 │   ├── release/              # リリース関連
 │   └── spec/                 # 要件仕様
+├── 📁 scripts/                # 開発用スクリプト
+│   └── complexity_check.py   # lizard複雑度チェックツール
+├── 📁 reports/                # 📌 品質レポート出力先
+│   └── complexity/           # 複雑度分析結果
 ├── 📁 config/                 # 設定ファイル
 ├── 📁 build_scripts/          # ビルド・配布スクリプト
 └── 📁 dist/                   # 📌 配布用実行ファイル
@@ -343,6 +410,7 @@ Week 1 End: 貢献開始
 | **🔧 開発** | [開発ガイド](#️-開発環境セットアップ) | 開発環境 |
 | **🧪 テスト** | [テストガイド](docs/testing/) | 品質保証 |
 | **📊 品質** | [カバレッジレポート](docs/testing/COVERAGE_REPORT.md) | 品質状況 |
+| **🧮 複雑度** | [複雑度チェック](scripts/complexity_check.py) | コード複雑度 |
 | **🚢 リリース** | [配布ガイド](docs/release/) | 配布・展開 |
 
 ---

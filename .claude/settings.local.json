@@ -28,7 +28,9 @@
       "Bash(claude code tdd-requirements:*)",
       "Bash(attendance-tool:*)",
       "Bash(dist/attendance-tool-cli.exe:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(distattendance-tool-gui.exe)",
+      "Bash(dist/attendance-tool-gui.exe)"
     ],
     "deny": []
   }

@@ -1,6 +1,6 @@
 # 勤怠管理ツール統合テスト用Makefile
 
-.PHONY: help install test unit-test integration-test e2e-test lint format clean
+.PHONY: help install test unit-test integration-test e2e-test lint format clean complexity complexity-report complexity-ci
 
 help:  ## このヘルプメッセージを表示
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -31,6 +31,16 @@ lint:  ## コード品質チェック
 	mypy src/
 	flake8 src/ tests/
 
+complexity:  ## コード複雑度チェック（基本）
+	python scripts/complexity_check.py --threshold 10 --verbose
+
+complexity-report:  ## コード複雑度レポート生成（HTML）
+	python scripts/complexity_check.py --threshold 10 --format html --output reports/complexity/complexity_report.html
+	@echo "📄 HTMLレポートが生成されました: reports/complexity/complexity_report.html"
+
+complexity-ci:  ## CI用コード複雑度チェック（閾値超過で失敗）
+	python scripts/complexity_check.py --threshold 10 --ci
+
 format:  ## コードフォーマット
 	black src/ tests/
 	isort src/ tests/
@@ -44,6 +54,7 @@ clean:  ## 一時ファイルを削除
 	rm -rf dist/
 	rm -rf build/
 	rm -rf *.egg-info/
+	rm -rf reports/
 
 # テストデータ生成
 test-data:  ## テストデータを生成
@@ -64,5 +75,14 @@ setup-dev:  ## 開発環境をセットアップ
 # リリース前チェック
 pre-release:  ## リリース前の品質チェック
 	make lint
+	make complexity-ci
 	make test
 	@echo "すべてのチェックが完了しました"
+
+# 品質レポート生成
+quality-report:  ## 品質レポートを生成（カバレッジ + 複雑度）
+	make unit-test
+	make complexity-report
+	@echo "🎉 品質レポートが生成されました"
+	@echo "  - カバレッジ: htmlcov/index.html"
+	@echo "  - 複雑度: reports/complexity/complexity_report.html"
