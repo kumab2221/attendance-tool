@@ -7,9 +7,9 @@
 from .exceptions import (
     AttendanceToolError,
     SystemError,
-    DataError, 
+    DataError,
     BusinessError,
-    UserError
+    UserError,
 )
 from .handler import ErrorHandler
 from .recovery import RecoveryManager
@@ -17,13 +17,13 @@ from .messages import MessageFormatter
 from .logger import ErrorLogger
 
 __all__ = [
-    'AttendanceToolError',
-    'SystemError', 
-    'DataError',
-    'BusinessError',
-    'UserError',
-    'ErrorHandler',
-    'RecoveryManager', 
-    'MessageFormatter',
-    'ErrorLogger'
+    "AttendanceToolError",
+    "SystemError",
+    "DataError",
+    "BusinessError",
+    "UserError",
+    "ErrorHandler",
+    "RecoveryManager",
+    "MessageFormatter",
+    "ErrorLogger",
 ]

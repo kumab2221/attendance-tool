@@ -17,17 +17,17 @@ STANDARD_EMPLOYEE_DATA = [
         attendance_days=20,
         attendance_rate=90.9,
         total_work_minutes=9600,  # 160時間
-        scheduled_overtime_minutes=1200,    # 20時間
+        scheduled_overtime_minutes=1200,  # 20時間
         tardiness_count=2,
         early_leave_count=1,
         paid_leave_days=1,
         warnings=["遅刻が多いです"],
-        violations=[]
+        violations=[],
     ),
     AttendanceSummary(
         employee_id="EMP002",
         employee_name="佐藤花子",
-        department="営業部", 
+        department="営業部",
         period_start=date(2024, 1, 1),
         period_end=date(2024, 1, 31),
         total_days=31,
@@ -35,12 +35,12 @@ STANDARD_EMPLOYEE_DATA = [
         attendance_days=22,
         attendance_rate=100.0,
         total_work_minutes=10560,  # 176時間
-        scheduled_overtime_minutes=2160,     # 36時間
+        scheduled_overtime_minutes=2160,  # 36時間
         tardiness_count=0,
         early_leave_count=0,
         paid_leave_days=0,
         warnings=[],
-        violations=["月36時間超過"]
+        violations=["月36時間超過"],
     ),
     AttendanceSummary(
         employee_id="EMP003",
@@ -52,14 +52,14 @@ STANDARD_EMPLOYEE_DATA = [
         business_days=22,
         attendance_days=19,
         attendance_rate=86.4,
-        total_work_minutes=9120,   # 152時間
-        scheduled_overtime_minutes=720,      # 12時間
+        total_work_minutes=9120,  # 152時間
+        scheduled_overtime_minutes=720,  # 12時間
         tardiness_count=1,
         early_leave_count=0,
         paid_leave_days=2,
         warnings=[],
-        violations=[]
-    )
+        violations=[],
+    ),
 ]
 
 STANDARD_DEPARTMENT_DATA = [
@@ -74,7 +74,7 @@ STANDARD_DEPARTMENT_DATA = [
         attendance_rate=92.0,
         average_work_minutes=9600,
         violation_count=1,
-        compliance_score=85.0
+        compliance_score=85.0,
     ),
     DepartmentSummary(
         department_code="SALES",
@@ -87,8 +87,8 @@ STANDARD_DEPARTMENT_DATA = [
         attendance_rate=98.5,
         average_work_minutes=10560,
         violation_count=2,
-        compliance_score=75.0
-    )
+        compliance_score=75.0,
+    ),
 ]
 
 # エッジケース用テストデータ
@@ -108,7 +108,7 @@ EDGE_CASE_DATA = [
         scheduled_overtime_minutes=0,
         tardiness_count=0,
         early_leave_count=0,
-        paid_leave_days=0
+        paid_leave_days=0,
     ),
     # 特殊文字を含む名前
     AttendanceSummary(
@@ -125,6 +125,6 @@ EDGE_CASE_DATA = [
         scheduled_overtime_minutes=2160,
         tardiness_count=0,
         early_leave_count=0,
-        paid_leave_days=0
-    )
+        paid_leave_days=0,
+    ),
 ]

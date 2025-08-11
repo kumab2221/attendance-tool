@@ -11,21 +11,21 @@ from .models import (
     DateFilterConfig,
     DateFilterError,
     InvalidPeriodError,
-    DateRangeError
+    DateRangeError,
 )
 from .integrated_filter import IntegratedDateFilter, ValidatedDateFilter
 
 __all__ = [
-    'DateFilter',
-    'PeriodSpecification', 
-    'PeriodType',
-    'FilterResult',
-    'DateFilterConfig',
-    'DateFilterError',
-    'InvalidPeriodError',
-    'DateRangeError',
-    'IntegratedDateFilter',
-    'ValidatedDateFilter'
+    "DateFilter",
+    "PeriodSpecification",
+    "PeriodType",
+    "FilterResult",
+    "DateFilterConfig",
+    "DateFilterError",
+    "InvalidPeriodError",
+    "DateRangeError",
+    "IntegratedDateFilter",
+    "ValidatedDateFilter",
 ]
 
-__version__ = '1.0.0'
+__version__ = "1.0.0"

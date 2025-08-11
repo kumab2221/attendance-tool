@@ -14,7 +14,7 @@ from attendance_tool.output.models import CSVExportConfig
 from tests.fixtures.csv_export.standard_employee_data import (
     STANDARD_EMPLOYEE_DATA,
     STANDARD_DEPARTMENT_DATA,
-    EDGE_CASE_DATA
+    EDGE_CASE_DATA,
 )
 
 
@@ -30,6 +30,7 @@ class TestCSVExporter:
         """テストクリーンアップ"""
         # 一時ディレクトリをクリーンアップ
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_export_employee_report_normal_case(self):
@@ -50,16 +51,16 @@ class TestCSVExporter:
         print(f"Errors: {result.errors}")
         print(f"File path: {result.file_path}")
         print(f"Expected file: {output_path / 'employee_report_2024_01.csv'}")
-        
+
         assert result.success is True
         assert result.record_count == 3
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
-        
+
         # CSVファイルの内容確認
-        with open(expected_file, 'r', encoding='utf-8-sig') as f:
+        with open(expected_file, "r", encoding="utf-8-sig") as f:
             content = f.read()
             assert "社員ID" in content
             assert "EMP001" in content
@@ -82,7 +83,7 @@ class TestCSVExporter:
         # Then
         assert result.success is True
         assert result.record_count == 2
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
@@ -103,13 +104,13 @@ class TestCSVExporter:
         # Then
         assert result.success is True
         assert result.record_count == 0
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
-        
+
         # ヘッダーのみのファイルかチェック
-        with open(expected_file, 'r', encoding='utf-8-sig') as f:
+        with open(expected_file, "r", encoding="utf-8-sig") as f:
             lines = f.readlines()
             assert len(lines) == 1  # ヘッダー行のみ
             assert "社員ID" in lines[0]
@@ -128,7 +129,7 @@ class TestCSVExporter:
         # Then
         assert result.success is True
         assert nonexistent_path.exists()  # ディレクトリが自動作成される
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
@@ -137,8 +138,10 @@ class TestCSVExporter:
         """TC-301-103: 書き込み権限なし"""
         # Given
         employee_data = STANDARD_EMPLOYEE_DATA[:1]
-        
-        with patch('pandas.DataFrame.to_csv', side_effect=PermissionError("Permission denied")):
+
+        with patch(
+            "pandas.DataFrame.to_csv", side_effect=PermissionError("Permission denied")
+        ):
             # When
             result = self.exporter.export_employee_report(
                 employee_data, self.temp_dir, 2024, 1
@@ -148,7 +151,7 @@ class TestCSVExporter:
             assert result.success is False
             assert "Permission denied" in str(result.errors)
 
-    @patch('pandas.DataFrame.to_csv')
+    @patch("pandas.DataFrame.to_csv")
     def test_export_disk_full_error(self, mock_to_csv):
         """TC-301-104: ディスク容量不足シミュレーション"""
         # Given
@@ -168,6 +171,7 @@ class TestCSVExporter:
         """TC-301-105: 不正なデータ形式"""
         # Given
         from attendance_tool.calculation.summary import AttendanceSummary
+
         invalid_data = [
             AttendanceSummary(
                 employee_id="",  # 空のID
@@ -176,12 +180,12 @@ class TestCSVExporter:
                 total_days=31,
                 business_days=22,
                 employee_name="",  # 空の名前
-                department="",     # 空の部署名
+                department="",  # 空の部署名
                 total_work_minutes=-100,  # 負の値（実際は不正だが、処理は継続）
                 attendance_days=22,
                 tardiness_count=0,
                 early_leave_count=0,
-                paid_leave_days=0
+                paid_leave_days=0,
             )
         ]
 
@@ -193,13 +197,13 @@ class TestCSVExporter:
         # Then
         # データバリデーションが実行され、デフォルト値で処理される
         assert result.success is True  # デフォルト値で成功
-        
+
         # ファイルの存在確認
         expected_file = result.file_path
         assert expected_file.exists()
-        
+
         # ファイル内容確認（デフォルト値が使用されている）
-        with open(expected_file, 'r', encoding='utf-8-sig') as f:
+        with open(expected_file, "r", encoding="utf-8-sig") as f:
             content = f.read()
             assert "UNKNOWN" in content  # デフォルトID
             assert "Unknown User" in content  # デフォルト名前
@@ -217,13 +221,13 @@ class TestCSVExporter:
 
         # Then
         assert result.success is True
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
-        
+
         # CSVファイルの内容確認（特殊文字が適切にエスケープされている）
-        with open(expected_file, 'r', encoding='utf-8-sig') as f:
+        with open(expected_file, "r", encoding="utf-8-sig") as f:
             content = f.read()
             assert "EDGE002" in content
             # クォートやエスケープが正しく処理されている
@@ -233,6 +237,7 @@ class TestCSVExporter:
         """TC-301-202: 大容量データセットの性能テスト"""
         # Given: 100件のデータを生成（テストを軽量化）
         from attendance_tool.calculation.summary import AttendanceSummary
+
         large_dataset = []
         for i in range(100):
             data = AttendanceSummary(
@@ -249,18 +254,19 @@ class TestCSVExporter:
                 scheduled_overtime_minutes=1200,
                 tardiness_count=0,
                 early_leave_count=0,
-                paid_leave_days=0
+                paid_leave_days=0,
             )
             large_dataset.append(data)
 
         # When
         import time
+
         start_time = time.time()
-        
+
         result = self.exporter.export_employee_report(
             large_dataset, self.temp_dir, 2024, 1
         )
-        
+
         end_time = time.time()
         processing_time = end_time - start_time
 
@@ -268,16 +274,16 @@ class TestCSVExporter:
         assert result.success is True
         assert result.record_count == 100
         assert processing_time < 10.0  # 10秒以内
-        
+
         # 実際に生成されたファイルを使用
         expected_file = result.file_path
         assert expected_file.exists()
-        
+
         # ファイルサイズチェック
         file_size = expected_file.stat().st_size
         assert file_size > 0
 
-    @patch('attendance_tool.utils.config.ConfigManager.get_csv_format')
+    @patch("attendance_tool.utils.config.ConfigManager.get_csv_format")
     def test_export_with_config_error(self, mock_get_config):
         """TC-301-106: 設定ファイル読み込みエラー"""
         # Given
@@ -292,7 +298,7 @@ class TestCSVExporter:
         # Then
         # デフォルト設定が使用されて処理が継続される
         assert result.success is True
-        
+
         # ファイルが生成されていることを確認
         expected_file = result.file_path
         assert expected_file.exists()
@@ -311,7 +317,7 @@ class TestExportResult:
             file_size=1024,
             processing_time=1.5,
             errors=[],
-            warnings=["設定ファイルが見つかりません"]
+            warnings=["設定ファイルが見つかりません"],
         )
 
         # Then
@@ -333,6 +339,7 @@ class TestCSVExportIntegration:
     def teardown_method(self):
         """テストクリーンアップ"""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_multiple_reports_export(self):
@@ -353,7 +360,7 @@ class TestCSVExportIntegration:
         # Then
         assert employee_result.success is True
         assert department_result.success is True
-        
+
         # 両方のファイルが存在することを確認
         assert employee_result.file_path.exists()
         assert department_result.file_path.exists()

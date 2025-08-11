@@ -10,9 +10,4 @@ from .file_dialogs import FileDialogs
 from .progress_window import ProgressWindow
 from .settings_window import SettingsWindow
 
-__all__ = [
-    "MainWindow",
-    "FileDialogs", 
-    "ProgressWindow",
-    "SettingsWindow"
-]
+__all__ = ["MainWindow", "FileDialogs", "ProgressWindow", "SettingsWindow"]
