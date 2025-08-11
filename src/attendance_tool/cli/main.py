@@ -3,21 +3,48 @@
 import click
 from pathlib import Path
 
-from attendance_tool import __version__
-from attendance_tool.utils.config import setup_logging, get_environment
-from .validators import (
-    ValidationError,
-    validate_option_combinations,
-    validate_input_file,
-    validate_month_format,
-    validate_date_range,
-    validate_year_range,
-    validate_output_path,
-    validate_formats,
-    validate_report_types,
-    validate_chunk_size
-)
-from .progress import ProgressBar, ProcessingSteps, show_processing_summary
+try:
+    from attendance_tool import __version__
+    from attendance_tool.utils.config import setup_logging, get_environment
+    from .validators import (
+        ValidationError,
+        validate_option_combinations,
+        validate_input_file,
+        validate_month_format,
+        validate_date_range,
+        validate_year_range,
+        validate_output_path,
+        validate_formats,
+        validate_report_types,
+        validate_chunk_size
+    )
+    from .progress import ProgressBar, ProcessingSteps, show_processing_summary
+except ImportError:
+    # PyInstallerでの実行時のフォールバック
+    import sys
+    import os
+    sys.path.append(os.path.dirname(__file__))
+    __version__ = "0.1.0"
+    
+    def setup_logging():
+        pass
+    
+    def get_environment():
+        return "production"
+    
+    from validators import (
+        ValidationError,
+        validate_option_combinations,
+        validate_input_file,
+        validate_month_format,
+        validate_date_range,
+        validate_year_range,
+        validate_output_path,
+        validate_formats,
+        validate_report_types,
+        validate_chunk_size
+    )
+    from progress import ProgressBar, ProcessingSteps, show_processing_summary
 
 
 @click.group(invoke_without_command=True)
